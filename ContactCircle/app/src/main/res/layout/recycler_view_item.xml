@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:CircleView="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:layout_gravity="center"
+
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:id="@+id/recycler_item_ll_head">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="通信学院"
+                android:textColor="@color/color_primary_blue"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:drawableLeft="@mipmap/ic_circle"
+                android:drawablePadding="@dimen/activity_horizontal_margin"
+
+                />
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:id="@+id/recycler_item_rl_user_show"
+            android:layout_below="@id/recycler_item_ll_head">
+
+            <com.cqupt.view.CircleImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:gravity="center"
+                CircleView:type="circle"
+                CircleView:src="@mipmap/ic_account_black"
+                android:id="@+id/recycler_item_cv_user_head"
+                android:layout_centerVertical="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/UserName"
+                android:text="李双"
+                android:id="@+id/recycler_item_tx_user_name"
+                android:layout_toRightOf="@id/recycler_item_cv_user_head"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_alignTop="@id/recycler_item_cv_user_head"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/UpdateTime"
+                android:text="公开-2小时以前"
+                android:id="@+id/recycler_item_tx_update_time"
+                android:layout_alignLeft="@id/recycler_item_tx_user_name"
+                android:layout_below="@id/recycler_item_tx_user_name"
+                android:layout_marginTop="5dp"
+
+
+                />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/UpdateTime"
+                    android:text="#消息"
+                    android:layout_gravity="center" />
+            </android.support.v7.widget.CardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/divider" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recycler_item_rl_content"
+            android:layout_below="@id/recycler_item_rl_user_show">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/divider"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2015年3月4日举行校运动会,请各位老师学生准备好。"
+                style="@style/MessageTitle"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:id="@+id/recycler_item_tx_message_title"
+                android:lines="2"
+                android:ellipsize="end"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2015年3月4日举行校运动会,请各位老师学生准备好。"
+                style="@style/UpdateTime"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_below="@id/recycler_item_tx_message_title"
+                android:layout_marginTop="5dp"
+                android:lines="2"
+                android:ellipsize="end"
+                android:id="@+id/recycler_item_tx_message_abstract" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@mipmap/message_img"
+                android:scaleType="fitXY"
+                android:id="@+id/recycler_item_iv_message_src"
+                android:layout_below="@id/recycler_item_tx_message_abstract" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@id/recycler_item_iv_message_src"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_share_selector"
+                    style="@style/UpdateTime"
+                    android:text="29"
+                    android:drawablePadding="5dp"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/recycler_item_tx_message_share"
+                    android:layout_centerVertical="true"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_comment_selector"
+                    style="@style/UpdateTime"
+                    android:text="29"
+                    android:drawablePadding="5dp"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/recycler_item_tx_message_comment"
+                    android:layout_toLeftOf="@id/recycler_item_tx_message_share"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_praise_selector"
+                    style="@style/UpdateTime"
+                    android:text="29"
+                    android:drawablePadding="5dp"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/recycler_item_tx_message_praise"
+                    android:layout_centerVertical="true"
+
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_item_attachment_selector"
+                    style="@style/UpdateTime"
+                    android:text="29"
+                    android:drawablePadding="5dp"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/recycler_item_tx_message_attachment"
+                    android:layout_toRightOf="@id/recycler_item_tx_message_praise"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

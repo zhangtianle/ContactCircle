@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:CircleView="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hint">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="385dp"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_centerInParent="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <com.cqupt.view.CircleImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    CircleView:type="circle"
+                    CircleView:src="@mipmap/ic_account_black"
+                    android:scaleType="fitXY"
+                    android:id="@+id/send_message_activity_civ" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:text="李双"
+                    android:textStyle="bold"
+                    android:layout_toRightOf="@id/send_message_activity_civ"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:id="@+id/send_message_activity_tx_user_name" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/UpdateTime"
+                    android:text="通信学院"
+                    android:layout_below="@id/send_message_activity_tx_user_name"
+                    android:layout_alignLeft="@id/send_message_activity_tx_user_name"
+                    android:drawableLeft="@mipmap/ic_circle"
+                    android:gravity="center"
+                    android:drawablePadding="10dp"
+                    android:layout_marginTop="3dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_send_selector"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:hint="说点什么吧..."
+                android:maxLength="200"
+                android:gravity="top"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:background="@drawable/edit_text_message_selector"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/divider"
+                android:minHeight="54dp">
+
+                <ImageView
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:background="@drawable/iv_send_message_tool_selector"
+                    android:clickable="true"
+                    android:src="@mipmap/ic_camera"
+                    android:scaleType="center"
+                    android:id="@+id/activity_send_message_tool_iv_camera" />
+
+                <ImageView
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:background="@drawable/iv_send_message_tool_selector"
+                    android:src="@mipmap/ic_attachment"
+                    android:clickable="true"
+                    android:scaleType="center"
+                    android:layout_toRightOf="@id/activity_send_message_tool_iv_camera" />
+
+                <ImageView
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:background="@drawable/iv_send_message_tool_selector"
+                    android:src="@mipmap/ic_dots"
+                    android:clickable="true"
+                    android:scaleType="center"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+        </LinearLayout>
+
+
+
+</RelativeLayout>

@@ -1,0 +1,55 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="colorPrimary">@color/color_primary_blue</item>
+        <item name="colorPrimaryDark">@color/color_primary_blue_dark</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="ic_account">@mipmap/ic_account_white</item>
+        <item name="tx_color_user_name">@android:color/white</item>
+        <item name="colorAccent">@color/color_primary_red</item>
+    </style>
+
+    <style name="ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="UserName" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">18sp</item>
+
+    </style>
+
+    <style name="MessageTitle" parent="UserName">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="NavigationTitle" parent="UserName">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="UpdateTime" parent="TextAppearance.AppCompat.Display1">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="AppTheme.SendMessage" parent="android:style/Theme.Translucent.NoTitleBar"  >
+        <!--<item name="android:textColor">@android:color/black</item>-->
+        <!--<item name="colorPrimary">@color/color_primary_blue</item>-->
+        <!--<item name="colorPrimaryDark">@color/color_primary_blue_dark</item>-->
+        <!--<item name="colorControlNormal">@android:color/white</item>-->
+        <!--<item name="ic_account">@mipmap/ic_account_white</item>-->
+        <!--<item name="tx_color_user_name">@android:color/white</item>-->
+        <!--<item name="colorAccent">@color/color_primary_red</item>-->
+        <item name="android:windowAnimationStyle">@style/AppTheme.SendMessage.Animation</item>
+    </style>
+    <style name="AppTheme.SendMessage.Animation" parent="@android:style/Animation.Activity">
+
+      <item name="android:activityOpenEnterAnimation">@anim/send_message_activity_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/send_message_activity_out</item>
+    </style>
+
+
+</resources>

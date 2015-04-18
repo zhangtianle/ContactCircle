@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="ic_account" format="reference"/>
+    <attr name="tx_color_user_name" format="color"/>
+
+    <declare-styleable name="CircleView">
+
+        <attr name="borderRadius" format="dimension"></attr>
+        <attr name="type" >
+            <enum name="circle" value="0"></enum>
+            <enum name="round" value="1"></enum>
+        </attr>
+        <attr name="src" format="reference"></attr>
+    </declare-styleable>
+</resources>

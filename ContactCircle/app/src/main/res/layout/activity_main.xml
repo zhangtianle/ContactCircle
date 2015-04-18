@@ -1,0 +1,111 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:id="@+id/main_activity_fl_root">
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_activity_rv"
+        android:clipToPadding="false" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/mian_activity_ll_toolbar_container">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="?colorPrimary"
+            app:titleTextAppearance="@style/ToolbarTitle"
+            android:id="@+id/main_activity_tb">
+
+            <ImageView
+                android:layout_width="@dimen/activity_toolbar_icon"
+                android:layout_height="@dimen/activity_toolbar_icon"
+                android:src="?ic_account"
+                android:scaleType="center"
+                android:contentDescription="user_photo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="李双"
+                android:textColor="?tx_color_user_name" />
+        </android.support.v7.widget.Toolbar>
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:duplicateParentState="true"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:id="@+id/main_activity_circle_header_rl"
+                android:background="@color/switch_thumb_normal_material_light">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="首页"
+                    style="@style/NavigationTitle"
+                    android:id="@+id/main_activity_circle_header_tx"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_arrow_selector"
+                    android:duplicateParentState="true"
+                    android:id="@+id/main_activity_circle_header_iv"
+                    />
+
+            </RelativeLayout>
+
+    </LinearLayout>
+
+    <!--<LinearLayout-->
+
+        <!--android:orientation="vertical"-->
+        <!--android:id="@+id/main_activity_ll_circle_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/color_primary_red_dark">-->
+        <!--&lt;!&ndash;android:layout_marginBottom="-50dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_gravity="bottom"&ndash;&gt;-->
+    <!--</LinearLayout>-->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:id="@+id/main_activity_rl_send_tool_container">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_send_message"
+            android:background="@drawable/ic_send_message_selector"
+            android:clickable="true"
+            android:scaleType="center"
+            android:layout_marginBottom="12dp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/main_activity_iv_send_message"/>
+    </RelativeLayout>
+
+
+</FrameLayout>
