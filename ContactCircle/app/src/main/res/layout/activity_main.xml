@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/mian_activity_ll_toolbar_container">
+        android:id="@+id/main_activity_ll_toolbar_container">
 
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
@@ -30,7 +30,8 @@
                 android:layout_height="@dimen/activity_toolbar_icon"
                 android:src="?ic_account"
                 android:scaleType="center"
-                android:contentDescription="user_photo" />
+                android:contentDescription="user_photo"
+                android:id="@+id/main_activity_iv_user_photo"/>
 
             <TextView
                 android:layout_width="wrap_content"

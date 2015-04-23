@@ -18,10 +18,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<String> mData;
 
     public RecyclerAdapter(List<String> data) {
-
         this.mData = data;
-
-
     }
 
     @Override

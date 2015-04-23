@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.cqupt.view.ObservableScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_information_activity_sv">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@mipmap/user_information_ll_bg"
+                android:scaleType="center"
+                android:contentDescription="user_photo" />
+
+            <com.cqupt.view.CircleImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="-70dp"
+                app:src="@mipmap/ic_launcher"
+                android:scaleType="fitXY"
+                app:type="circle" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_information_activity_rl_user_information"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Base.TextAppearance.AppCompat.Display1"
+                    android:textColor="@android:color/black"
+                    android:text="李双"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/user_information_activity_tv_user_name" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:text="就读于通信学院"
+                    android:drawableLeft="@mipmap/ic_academy"
+                    android:layout_below="@id/user_information_activity_tv_user_name"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/user_information_activity_tv_user_academy"
+                    android:drawablePadding="5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/user_information_activity_tv_user_academy"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_alignTop="@id/user_information_activity_tv_user_academy"
+                    android:layout_marginLeft="10dp"
+                    android:text="0191203班"
+                    android:drawableLeft="@mipmap/ic_class"
+                    android:drawablePadding="5dp"
+                    android:id="@+id/user_information_activity_tv_user_class" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已加入3个联络圈"
+                    android:id="@+id/user_information_activity_tv_user_circle_count"
+                    style="@style/UpdateTime"
+                    android:layout_below="@id/user_information_activity_tv_user_academy"
+                    android:layout_marginTop="5dp" />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/divider"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin">
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/hint" />
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="信息"
+                    style="@style/TextAppearance.AppCompat.Body1" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/hint" />
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="照片"
+                    style="@style/TextAppearance.AppCompat.Body1" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/hint" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_information_activity_rv"
+                />
+
+        </LinearLayout>
+
+
+
+    </com.cqupt.view.ObservableScrollView>
+
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@drawable/user_information_activity_toolbar_bg"
+        app:titleTextAppearance="@style/ToolbarTitle"
+        android:id="@+id/user_information_activity_tb" />
+
+</RelativeLayout>

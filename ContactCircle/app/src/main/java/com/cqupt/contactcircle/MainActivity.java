@@ -24,30 +24,41 @@ import com.cqupt.adapter.ExpandableListAdapter;
 import com.cqupt.adapter.RecyclerAdapter;
 import com.cqupt.listener.HidingScrollListener;
 import com.cqupt.tool.Utils;
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+public class MainActivity extends ActionBarActivity {
+    @ViewInject(R.id.main_activity_tb)
     private Toolbar mToolbar;
+    @ViewInject(R.id.main_activity_rv)
     private RecyclerView mRecyclerView;
+    @ViewInject(R.id.main_activity_ll_toolbar_container)
     private View mToolbarContainer;
+    @ViewInject(R.id.main_activity_rl_send_tool_container)
     private View mSendToolContainer;
     private View mCircleLayout;
     private boolean mCircleLayoutIsShow;
+    @ViewInject(R.id.main_activity_fl_root)
     private FrameLayout mRootLayout;
     private ExpandableListView mListView;
+    @ViewInject(R.id.main_activity_circle_header_tx)
     private TextView mCircleHeaderName;
+    @ViewInject(R.id.main_activity_circle_header_iv)
     private ImageView mCircleHeaderIcon;
-
+    @ViewInject(R.id.main_activity_iv_user_photo)
+    private ImageView mUserPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ViewUtils.inject(this);
         initToolbar();
         initRecycler();
-        initOtherView();
         initCircleLayout();
 
 
@@ -69,13 +80,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     private void initCircleLayout() {
         mCircleLayout = LayoutInflater.from(this).inflate(R.layout.circle_layout, null);
-        mRootLayout = (FrameLayout) findViewById(R.id.main_activity_fl_root);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams.gravity = Gravity.TOP;
         layoutParams.topMargin = Utils.getToolbarHeight(this) * 2;
         mCircleLayout.setLayoutParams(layoutParams);
-
-
         mCircleLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -86,18 +94,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     }
 
-    private void initOtherView() {
-        findViewById(R.id.main_activity_circle_header_rl).setOnClickListener(this);
-        findViewById(R.id.main_activity_iv_send_message).setOnClickListener(this);
-
-        mCircleHeaderName = (TextView) findViewById(R.id.main_activity_circle_header_tx);
-        mCircleHeaderIcon = (ImageView) findViewById(R.id.main_activity_circle_header_iv);
-
-    }
 
     private void initRecycler() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.main_activity_rv);
-        mSendToolContainer = findViewById(R.id.main_activity_rl_send_tool_container);
         mRecyclerView.setPadding(0, Utils.getToolbarHeight(this) * 2 + 5, 0, 0);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getApplicationContext()));
         mRecyclerView.setAdapter(new RecyclerAdapter(createList()));
@@ -147,12 +145,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     private void initToolbar() {
-        mToolbarContainer = findViewById(R.id.mian_activity_ll_toolbar_container);
-        mToolbar = (Toolbar) findViewById(R.id.main_activity_tb);
         setSupportActionBar(mToolbar);
         setTitle("");
-
-
     }
 
 
@@ -179,7 +173,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
 
-    @Override
+    @OnClick({R.id.main_activity_circle_header_rl,
+            R.id.main_activity_iv_send_message,
+            R.id.main_activity_iv_user_photo
+    })
+
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.main_activity_circle_header_rl:
@@ -187,7 +185,16 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 break;
             case R.id.main_activity_iv_send_message:
                 goSendMessageActivity();
+                break;
+            case R.id.main_activity_iv_user_photo:
+                goToUserInformationActivity();
+                break;
         }
+    }
+
+    private void goToUserInformationActivity() {
+        Intent intent = new Intent(MainActivity.this, UserInformation.class);
+        startActivity(intent);
     }
 
     private void goSendMessageActivity() {
