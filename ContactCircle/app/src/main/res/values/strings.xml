@@ -3,4 +3,16 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="select_academy">请选择所在学院</string>
+
+
+    <string-array name="college">
+        <item>通信与信息工程学院</item>
+        <item>计算机科学与技术学院</item>
+        <item>自动化学院</item>
+        <item>经济管理学院</item>
+        <item>传媒艺术学院</item>
+        <item>马克思学院</item>
+        <item>法学院</item>
+    </string-array>
 </resources>

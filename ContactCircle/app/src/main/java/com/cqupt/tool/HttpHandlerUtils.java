@@ -8,6 +8,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.lidroid.xutils.util.LogUtils;
 
 import java.io.File;
 
@@ -138,7 +139,6 @@ public class HttpHandlerUtils {
         //      params.addBodyParameter("file", new File("path"));
 
 
-        System.out.println("HttpUtils");
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST,
                 url,
@@ -147,7 +147,7 @@ public class HttpHandlerUtils {
 
                     @Override
                     public void onStart() {
-                        System.out.println("onStart");
+                        LogUtils.e("onStart()   ");
                     }
 
                     @Override
@@ -157,22 +157,25 @@ public class HttpHandlerUtils {
                         } else {
                             //  testTextView.setText("reply: " + current + "/" + total);
                         }
-                        System.out.println("onLoading");
+                        //  System.out.println("onLoading");
+                        LogUtils.e("onLoading()   ");
                     }
 
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
                         //testTextView.setText("reply: " + responseInfo.result);
-                        System.out.println("onSuccess   " + responseInfo.result);
+                        LogUtils.e("onSuccess()   " + responseInfo.result);
+                        // System.out.println("onSuccess   " + responseInfo.result);
                         if (loginStateListener != null) {
-                            loginStateListener.loginState(responseInfo.toString());
+                            loginStateListener.loginState(responseInfo.result);
                         }
                     }
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
                         //testTextView.setText(error.getExceptionCode() + ":" + msg);
-                        System.out.println("onFailure");
+                        // System.out.println("onFailure" + msg);
+                        LogUtils.e("onFailure()   " + msg);
                     }
                 });
 

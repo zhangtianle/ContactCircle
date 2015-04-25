@@ -1,23 +1,40 @@
 package com.cqupt.bean;
 
+import java.util.List;
+
 /**
  * Created by ls on 15-4-20.
  */
 public class User {
 
-
+    private int grade;
     private String name;
     private String passWord;
-    private String studentNum;
-    private String userUUID;
+    private String userNum;
+    private String id;
     private String userClass;
+    private String userCollege;
+    private List<Circle> circles;
 
-    public String getUserAcademy() {
-        return userAcademy;
+
+    public List<Circle> getCircles() {
+        return circles;
     }
 
-    public void setUserAcademy(String userAcademy) {
-        this.userAcademy = userAcademy;
+    public void setCircles(List<Circle> circles) {
+        this.circles = circles;
+    }
+    public User() {
+
+    }
+
+
+    public String getUserCollege() {
+        return userCollege;
+    }
+
+    public void setUserCollege(String userCollege) {
+        this.userCollege = userCollege;
     }
 
     public String getUserClass() {
@@ -28,25 +45,23 @@ public class User {
         this.userClass = userClass;
     }
 
-    private String userAcademy;
 
-
-    public User(String name, String passWord, String studentNum, String userUUID, String userClass, String userAcademy) {
-        this.studentNum = studentNum;
+    public User(String name, String passWord, String userNum, String id, String userClass, String userCollege, List<Circle> circles) {
+        this.userNum = userNum;
         this.passWord = passWord;
-        this.userUUID = userUUID;
+        this.id = id;
         this.name = name;
-        this.userAcademy = userAcademy;
+        this.userCollege = userCollege;
         this.userClass = userClass;
-
+        this.circles = circles;
     }
 
-    public String getStudentNum() {
-        return studentNum;
+    public String getUserNum() {
+        return userNum;
     }
 
-    public void setStudentNum(String studentNum) {
-        this.studentNum = studentNum;
+    public void setUserNum(String userNum) {
+        this.userNum = userNum;
     }
 
     public String getPassWord() {
@@ -57,12 +72,12 @@ public class User {
         this.passWord = passWord;
     }
 
-    public String getUserUUID() {
-        return userUUID;
+    public String getId() {
+        return id;
     }
 
-    public void setUserUUID(String userUUID) {
-        this.userUUID = userUUID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -78,8 +93,18 @@ public class User {
         return "User{" +
                 "name='" + name + '\'' +
                 ", passWord='" + passWord + '\'' +
-                ", studentNum='" + studentNum + '\'' +
-                ", userUUID='" + userUUID + '\'' +
+                ", userNum='" + userNum + '\'' +
+                ", id='" + id + '\'' +
+                ", userCollege='" + userCollege + '\'' +
                 '}';
+    }
+
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
     }
 }

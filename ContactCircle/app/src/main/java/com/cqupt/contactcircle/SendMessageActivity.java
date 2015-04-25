@@ -71,7 +71,7 @@ public class SendMessageActivity extends Activity {
             case R.id.send_message_activity_tool_iv_attachment:
                 startFileManager();
                 //HttpHandlerUtils.downLoad("http://www.people.com.cn/mediafile/pic/GQ/20150414/64/16486532101230056244.jpg");
-                //  DBUtils.saveDb(this);
+                //  DBUtils.saveUserToDb(this);
                 // HttpHandlerUtils.downLoad("http://openbox.mobilem.360.cn/index/d/sid/2041682");
                 //   System.out.println("1111HttpUtils");
                 // HttpHandlerUtils.postInfor("http://113.251.216.145:8080/Lianluoquan/Login");

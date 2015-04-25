@@ -12,7 +12,7 @@ import java.io.File;
 public class App extends Application {
     public static final int GET_PHOTO_REQUEST_CODE = 1;
     public static final int GET_ATTACHMENT_REQUEST_CODE = 2;
-    public static final String url="http://222.182.106.128:8080/Lianluoquan/Register";
+    public static final String url="http://113.251.218.163:8080/Lianluoquan/Register";
 
     private static App mApp;
 
@@ -22,7 +22,6 @@ public class App extends Application {
     public void onCreate() {
         mApp = this;
         super.onCreate();
-
     }
 
 

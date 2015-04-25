@@ -7,4 +7,7 @@
     <color name="color_primary_red_dark">#F50057</color>
     <color name="divider">#1E000000</color>
     <color name="hint">#43000000</color>
+    <color name="orange">#ff9900</color>
+    <color name="green">#009900</color>
+    <color name="blue">#000099</color>
 </resources>

@@ -3,6 +3,7 @@ package com.cqupt.contactcircle;
 import android.animation.LayoutTransition;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,16 +52,32 @@ public class MainActivity extends ActionBarActivity {
     private ImageView mCircleHeaderIcon;
     @ViewInject(R.id.main_activity_iv_user_photo)
     private ImageView mUserPhoto;
+    @ViewInject(R.id.main_activity_sl)
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    // @ViewInject(R.layout.activity_main)
+    // private FrameLayout mRootFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ViewUtils.inject(this);
+        // mRootFrameLayout = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.activity_main,null);
         initToolbar();
+        initSwipeRefreshLayout();
         initRecycler();
         initCircleLayout();
+    }
 
+    private void initSwipeRefreshLayout() {
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.blue, R.color.green);
+        mSwipeRefreshLayout.setProgressViewOffset(false, 200, 240);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+        });
 
     }
 
@@ -75,7 +92,6 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             }
         });
-
     }
 
     private void initCircleLayout() {
@@ -90,8 +106,6 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             }
         });
-
-
     }
 
 
@@ -177,7 +191,6 @@ public class MainActivity extends ActionBarActivity {
             R.id.main_activity_iv_send_message,
             R.id.main_activity_iv_user_photo
     })
-
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.main_activity_circle_header_rl:

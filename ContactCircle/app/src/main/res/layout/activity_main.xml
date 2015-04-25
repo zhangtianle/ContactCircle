@@ -4,19 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:id="@+id/main_activity_fl_root">
+    android:id="@+id/main_activity_fl_root"
+>
 
-    <android.support.v7.widget.RecyclerView
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/main_activity_rv"
-        android:clipToPadding="false" />
+        android:layout_height="wrap_content"
+        android:id="@+id/main_activity_sl"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+
+        >
+
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/main_activity_rv"
+            android:clipToPadding="false" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/main_activity_ll_toolbar_container">
+        android:id="@+id/main_activity_ll_toolbar_container"
+        android:background="@android:color/transparent">
 
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
@@ -31,7 +45,7 @@
                 android:src="?ic_account"
                 android:scaleType="center"
                 android:contentDescription="user_photo"
-                android:id="@+id/main_activity_iv_user_photo"/>
+                android:id="@+id/main_activity_iv_user_photo" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -42,49 +56,35 @@
         </android.support.v7.widget.Toolbar>
 
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:duplicateParentState="true"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:id="@+id/main_activity_circle_header_rl"
+            android:background="@color/switch_thumb_normal_material_light">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="首页"
+                style="@style/NavigationTitle"
+                android:id="@+id/main_activity_circle_header_tx" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_arrow_selector"
                 android:duplicateParentState="true"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:id="@+id/main_activity_circle_header_rl"
-                android:background="@color/switch_thumb_normal_material_light">
+                android:id="@+id/main_activity_circle_header_iv" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="首页"
-                    style="@style/NavigationTitle"
-                    android:id="@+id/main_activity_circle_header_tx"
-                    />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/ic_arrow_selector"
-                    android:duplicateParentState="true"
-                    android:id="@+id/main_activity_circle_header_iv"
-                    />
-
-            </RelativeLayout>
+        </RelativeLayout>
 
     </LinearLayout>
-
-    <!--<LinearLayout-->
-
-        <!--android:orientation="vertical"-->
-        <!--android:id="@+id/main_activity_ll_circle_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:background="@color/color_primary_red_dark">-->
-        <!--&lt;!&ndash;android:layout_marginBottom="-50dp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_gravity="bottom"&ndash;&gt;-->
-    <!--</LinearLayout>-->
 
 
     <RelativeLayout
@@ -105,7 +105,7 @@
             android:scaleType="center"
             android:layout_marginBottom="12dp"
             android:layout_alignParentRight="true"
-            android:id="@+id/main_activity_iv_send_message"/>
+            android:id="@+id/main_activity_iv_send_message" />
     </RelativeLayout>
 
 

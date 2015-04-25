@@ -11,78 +11,94 @@ import com.alibaba.fastjson.JSON;
 import com.cqupt.app.App;
 import com.cqupt.bean.User;
 import com.cqupt.listener.LoginStateListener;
+import com.cqupt.tool.UserInforDBUtils;
 import com.cqupt.tool.HttpHandlerUtils;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
 /**
- * Created by ls on 15-4-20.
+ * Created by ls on 15-4-23.
  */
 public class LoginActivity extends Activity implements LoginStateListener {
-
-
-    @ViewInject(R.id.login_activity_et_student_name)
-    private EditText mUserName;
     @ViewInject(R.id.login_activity_et_student_number)
-    private EditText mUserNum;
+    private EditText mUserNumEditText;
     @ViewInject(R.id.login_activity_et_student_password)
-    private EditText mUserPassWord;
+    private EditText mPassWordEditText;
+    private UserInforDBUtils dbUtils;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ViewUtils.inject(this);
-
-
+        dbUtils = new UserInforDBUtils(this);
     }
 
-
-    @OnClick({R.id.login_activity_btn_login, R.id.login_activity_btn_register})
+    @OnClick({R.id.login_activity_btn_login, R.id.login_activity_btn_goto_register})
     public void onClick(View view) {
+
+
         switch (view.getId()) {
-            case R.id.login_activity_btn_login:
+            case R.id.login_activity_btn_goto_register:
 
-               // login();
+                goToOtherActivity(RegisterActivity.class);
                 break;
-
-            case R.id.login_activity_btn_register:
+            case R.id.login_activity_btn_login:
                 login();
+
                 break;
         }
-
 
     }
 
     private void login() {
-        String userNum = mUserNum.getText().toString();
-        String userPassWord = mUserPassWord.getText().toString();
-        System.out.println("userNum : "+userNum + " userPassWord :  " +userPassWord );
-        if (userNum == null || userPassWord == null || userNum.length() != 10) {
+        String userNum = mUserNumEditText.getText().toString();
+        String userPassWord = mPassWordEditText.getText().toString();
+        if (userNum == null || userNum.length() != 10 || userPassWord.equals("")) {
             Toast.makeText(this, "请正确输入登陆信息", Toast.LENGTH_SHORT).show();
             return;
         }
-        User user = new User(null, userPassWord, userNum, null, null, null);
+        User user = new User(null, userPassWord, userNum, null, null, null, null);
         String jsonString = JSON.toJSONString(user);
-        HttpHandlerUtils httpHandlerUtils =HttpHandlerUtils.getInstance();
+        LogUtils.e("login jsonString   " + jsonString);
+        HttpHandlerUtils httpHandlerUtils = HttpHandlerUtils.getInstance();
         httpHandlerUtils.setLoginStateListener(this);
         if (jsonString != null)
-            httpHandlerUtils.postInfor(App.url, "register", jsonString);
+            httpHandlerUtils.postInfor(App.url, "login", jsonString);
 
     }
+
+    private void goToOtherActivity(Class activity) {
+        Intent intent = new Intent(this, activity);
+        startActivity(intent);
+        this.finish();
+
+    }
+
 
     @Override
     public void loginState(String loginState) {
-        System.out.println("login state : " + loginState);
+        LogUtils.e(" login  state :  " + loginState);
+
         if (loginState.equals("false")) {
-            Toast.makeText(this, "登陆失败！", Toast.LENGTH_SHORT).show();
-        } else
-            goToMainActivity();
+            Toast.makeText(this, "登陆失败", Toast.LENGTH_SHORT).show();
+        } else {
+            goToOtherActivity(MainActivity.class);
+            User user = JSON.parseObject(loginState, User.class);
+            dbUtils.clearUserInfor();
+            dbUtils.saveUserToDb(this, user);
+            String id = dbUtils.getUserId();
+            LogUtils.e("login id is :" + id + " login circles is :" + dbUtils.getUserCircles().size());
+        }
     }
 
-    private void goToMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+
+    @Override
+    protected void onDestroy() {
+        dbUtils.closeUserInforDbUtils();
+        super.onDestroy();
     }
 }

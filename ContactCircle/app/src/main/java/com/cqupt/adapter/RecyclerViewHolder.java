@@ -10,7 +10,9 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
 
 
+
     private  RecyclerViewHolder(View itemView) {
+
 
         super(itemView);
     }
@@ -18,7 +20,10 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         return  new RecyclerViewHolder(itemView);
 
+
     }
+
+
 
 
 
