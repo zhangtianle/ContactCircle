@@ -9,13 +9,11 @@
 
  ![image](https://github.com/lishuang1234/ContactCircle/blob/master/ContactCircle/screenshort/1.png)
  
- 
-  ![image](https://github.com/lishuang1234/ContactCircle/blob/master/ContactCircle/screenshort/2.png)
+![image](https://github.com/lishuang1234/ContactCircle/blob/master/ContactCircle/screenshort/2.png)
   
-  
-   ![image](https://github.com/lishuang1234/ContactCircle/blob/master/ContactCircle/screenshort/3.png)
+![image](https://github.com/lishuang1234/ContactCircle/blob/master/ContactCircle/screenshort/3.png)
    
    
-    ![image](https://github.com/lishuang1234/ContactCircle/blob/master/ContactCircle/screenshort/4.png)
+![image](https://github.com/lishuang1234/ContactCircle/blob/master/ContactCircle/screenshort/4.png)
     
     
