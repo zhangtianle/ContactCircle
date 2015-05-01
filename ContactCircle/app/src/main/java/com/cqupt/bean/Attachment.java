@@ -28,7 +28,21 @@ public class Attachment {
         this.attachURL = attachURL;
     }
 
+
+
+    @Override
+    public String toString() {
+        return "Attachment{" +
+                "id='" + id + '\'' +
+                ", attachName='" + attachName + '\'' +
+                ", attachURL='" + attachURL + '\'' +
+                '}';
+    }
     private String id;
     private String attachName;
     private String attachURL;
+
+    public  Attachment(){
+
+    }
 }

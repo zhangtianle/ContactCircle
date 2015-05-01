@@ -9,6 +9,16 @@ public class User {
 
     private int grade;
     private String name;
+
+    public String getUserHead() {
+        return userHead;
+    }
+
+    public void setUserHead(String userHead) {
+        this.userHead = userHead;
+    }
+
+    private String userHead;
     private String passWord;
     private String userNum;
     private String id;
@@ -24,6 +34,7 @@ public class User {
     public void setCircles(List<Circle> circles) {
         this.circles = circles;
     }
+
     public User() {
 
     }
@@ -46,7 +57,7 @@ public class User {
     }
 
 
-    public User(String name, String passWord, String userNum, String id, String userClass, String userCollege, List<Circle> circles) {
+    public User(String name, String passWord, String userNum, String id, String userClass, String userCollege, List<Circle> circles,String userHead) {
         this.userNum = userNum;
         this.passWord = passWord;
         this.id = id;
@@ -54,6 +65,7 @@ public class User {
         this.userCollege = userCollege;
         this.userClass = userClass;
         this.circles = circles;
+        this.userHead =userHead;
     }
 
     public String getUserNum() {

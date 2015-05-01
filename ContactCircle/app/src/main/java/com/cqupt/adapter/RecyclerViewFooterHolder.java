@@ -10,9 +10,7 @@ import com.cqupt.view.CircleImageView;
  * Created by ls on 15-4-16.
  */
 public class RecyclerViewFooterHolder extends RecyclerView.ViewHolder {
-    private CircleImageView mUserHeadCircleImageView;
-    private TextView mUserNameTextView;
-    //private TextView mUser
+
 
 
 

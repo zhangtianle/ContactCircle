@@ -45,9 +45,24 @@ public class Comment {
         this.content = content;
     }
 
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id='" + id + '\'' +
+                ", pubuserUUID='" + pubuserUUID + '\'' +
+                ", reuserUUID='" + reuserUUID + '\'' +
+                ", content='" + content + '\'' +
+                ", layer=" + layer +
+                '}';
+    }
+
     private String id;
     private String pubuserUUID;
     private String reuserUUID;
     private String content;
     private int layer;
+
+    public Comment() {
+
+    }
 }

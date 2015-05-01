@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 下拉狀態 -->
+    <item android:state_expanded="false"
+        android:drawingCacheQuality="auto"
+        android:drawable="@mipmap/ic_step_into"/>
+    <!-- 收起狀態 -->
+    <item android:state_expanded="true"
+        android:drawingCacheQuality="auto"
+        android:drawable="@mipmap/ic_step_out"/>
+</selector>

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by ls on 15-4-20.
  */
-public class Article {
+public class AcceptArticle {
     public String getId() {
         return id;
     }
@@ -96,6 +96,23 @@ public class Article {
         this.photoURL = photoURL;
     }
 
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", title='" + title + '\'' +
+                ", time='" + time + '\'' +
+                ", content='" + content + '\'' +
+                ", zanCount=" + zanCount +
+                ", attachments=" + attachments +
+                ", comments=" + comments +
+                ", circle='" + circle + '\'' +
+                ", type='" + type + '\'' +
+                ", photoURL='" + photoURL + '\'' +
+                '}';
+    }
+
     private String id;
     private String name;
     private String title;
@@ -107,6 +124,8 @@ public class Article {
     private String circle;
     private String type;
     private String photoURL;
+    public AcceptArticle(){
 
+    }
 
 }

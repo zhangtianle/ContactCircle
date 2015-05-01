@@ -20,15 +20,35 @@ public class Circle {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCircleName() {
+        return circleName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCircleName(String circleName) {
+        this.circleName = circleName;
     }
 
+    public Circle(String userUUID, String id, String circleName) {
+        this.userUUID = userUUID;
+        this.id = id;
+        this.circleName = circleName;
+    }
+
+    public Circle() {
+
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "{" +
+                "userUUID='" + userUUID + '\'' +
+                ", id='" + id + '\'' +
+                ", circleName='" + circleName + '\'' +
+                '}';
+    }
     private String userUUID;
     private String id;
-    private String name;
+    private String circleName;
 }

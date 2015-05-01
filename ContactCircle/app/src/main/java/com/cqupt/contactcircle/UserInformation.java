@@ -5,9 +5,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.cqupt.adapter.FullyLinearLayoutManager;
 import com.cqupt.adapter.RecyclerAdapter;
+import com.cqupt.app.App;
+import com.cqupt.bean.AcceptArticle;
+import com.cqupt.tool.UserDBUtils;
 import com.cqupt.view.ObservableScrollView;
 import com.cqupt.view.ScrollViewListener;
 import com.lidroid.xutils.ViewUtils;
@@ -26,17 +30,35 @@ public class UserInformation extends ActionBarActivity implements ScrollViewList
     private RecyclerView nestedRecyclerView;
     @ViewInject(R.id.user_information_activity_sv)
     private ObservableScrollView mScrollView;
+    @ViewInject(R.id.user_information_activity_tv_user_name)
+    private TextView mUserName;
+    @ViewInject(R.id.user_information_activity_tv_user_academy)
+    private TextView mUserAcademy;
+    @ViewInject(R.id.user_information_activity_tv_user_class)
+    private TextView mUserClass;
 
-
+    private UserDBUtils mDbUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_information);
         ViewUtils.inject(this);
+        initDbUtils();
         initToolbar();
         initNestedRecyclerView();
         initScrollView();
+        initUserInforView();
+    }
+
+    private void initUserInforView() {
+        mUserName.setText(mDbUtils.getUserName());
+        mUserAcademy.setText(mDbUtils.getUserAcademy());
+        mUserClass.setText(mDbUtils.getUserClass());
+    }
+
+    private void initDbUtils() {
+        mDbUtils = App.getAppInstance().getUserDBUtils();
     }
 
     private void initScrollView() {
@@ -48,7 +70,8 @@ public class UserInformation extends ActionBarActivity implements ScrollViewList
         nestedRecyclerView.setAdapter(new RecyclerAdapter(createDataList()));
     }
 
-    private List<String> createDataList() {
+    private List<AcceptArticle> createDataList() {
+
         return null;
     }
 
@@ -56,7 +79,7 @@ public class UserInformation extends ActionBarActivity implements ScrollViewList
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.mipmap.ic_navigation_up);
         setTitle("");
-        mToolbar.setSubtitle("李双");
+        mToolbar.setSubtitle(mDbUtils.getUserName());
         mToolbar.setSubtitleTextColor(getResources().getColor(android.R.color.white));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

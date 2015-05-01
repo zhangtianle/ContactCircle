@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cqupt.bean.AcceptArticle;
 import com.cqupt.contactcircle.R;
+import com.lidroid.xutils.util.LogUtils;
 
 import java.util.List;
 
@@ -16,13 +18,20 @@ import java.util.List;
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<String> mData;
+    private List<AcceptArticle> articles;
     public static final int VIEW_TYPE_NORMAL = 0;
     public static final int VIEW_TYPE_FOOTER = 1;
     private boolean isFooter;
 
-    public RecyclerAdapter(List<String> data) {
-        this.mData = data;
+    public RecyclerAdapter(List<AcceptArticle> data) {
+        LogUtils.e("articles is : " + data);
+        this.articles = data;
+    }
+
+
+    public void addArticles(List<AcceptArticle> articles) {
+        this.articles.addAll(0, articles);
+        notifyItemInserted(0);//更新数据
     }
 
     @Override
@@ -32,23 +41,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         switch (i) {
             case VIEW_TYPE_NORMAL:
                 View recyclerViewItem = LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item, viewGroup, false);
-                viewHolder = RecyclerViewHolder.newInstance(recyclerViewItem);
+                viewHolder = RecyclerViewHolder.newInstance(recyclerViewItem, VIEW_TYPE_NORMAL);
                 break;
             case VIEW_TYPE_FOOTER:
                 View recyclerViewFooterItem = LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item_footer, viewGroup, false);
-                viewHolder = RecyclerViewHolder.newInstance(recyclerViewFooterItem);
+                viewHolder = RecyclerViewHolder.newInstance(recyclerViewFooterItem, VIEW_TYPE_FOOTER);
                 break;
+
         }
         return viewHolder;
-
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
         Log.d("Adapter", "onBindViewHolder  " + i);
-        switch (getItemViewType(i)){
+        switch (getItemViewType(i)) {
             case VIEW_TYPE_NORMAL:
-                bindItemViewHolder();
+                bindItemViewHolder(viewHolder, i);
                 break;
             case VIEW_TYPE_FOOTER:
                 bindFooterViewHolder();
@@ -59,16 +68,33 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private void bindFooterViewHolder() {
 
 
-
     }
 
-    private void bindItemViewHolder() {
-
+    /**
+     * 处理数据
+     */
+    private void bindItemViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
+        if (articles == null)
+            return;
+        AcceptArticle article = articles.get(i);
+        RecyclerViewHolder mRecyclerViewHolder = (RecyclerViewHolder) viewHolder;
+        mRecyclerViewHolder.mUserName.setText(article.getName());
+        mRecyclerViewHolder.mArticleTitle.setText(article.getTitle());
+        mRecyclerViewHolder.mArticleAbstract.setText(article.getContent());
+        mRecyclerViewHolder.mUpdateTime.setText(article.getTime());
+        mRecyclerViewHolder.mArticleType.setText(article.getType());
+        if (article.getComments() != null)
+            mRecyclerViewHolder.mArticleComments.setText(article.getComments().size() + "");
+        if (article.getAttachments() != null)
+            mRecyclerViewHolder.mArticleAttachments.setText(article.getAttachments().size() + "");
+        mRecyclerViewHolder.mCircle.setText(article.getCircle());
+        mRecyclerViewHolder.mArticlePraise.setText(article.getZanCount() + "");
+        //mRecyclerViewHolder.mArticleShares.setText(article.get);
     }
 
     @Override
     public int getItemCount() {
-        return getContentItemCount()+1;
+        return getContentItemCount() + 1;
     }
 
     @Override
@@ -81,7 +107,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public int getContentItemCount() {
-        return 10;
+        if (articles == null)
+            return 10;
+        else
+            return articles.size();
     }
 
 }

@@ -52,7 +52,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="李双"
-                android:textColor="?tx_color_user_name" />
+                android:textColor="?tx_color_user_name"
+                android:id="@+id/main_activity_tx_user_name"/>
         </android.support.v7.widget.Toolbar>
 
 

@@ -38,19 +38,20 @@
                 android:textStyle="bold"
                 android:layout_toRightOf="@id/send_message_activity_civ"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:id="@+id/send_message_activity_tx_user_name" />
+                android:id="@+id/send_article_activity_tx_user_name" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/UpdateTime"
                 android:text="通信学院"
-                android:layout_below="@id/send_message_activity_tx_user_name"
-                android:layout_alignLeft="@id/send_message_activity_tx_user_name"
+                android:layout_below="@id/send_article_activity_tx_user_name"
+                android:layout_alignLeft="@id/send_article_activity_tx_user_name"
                 android:drawableLeft="@mipmap/ic_circle"
                 android:gravity="center"
                 android:drawablePadding="10dp"
-                android:layout_marginTop="3dp" />
+                android:layout_marginTop="3dp"
+                android:id="@+id/send_article_activity_tx_circle" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -58,36 +59,68 @@
                 android:background="@drawable/ic_send_selector"
                 android:layout_centerVertical="true"
                 android:clickable="true"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentRight="true"
+                android:id="@+id/send_article_activity_iv_send" />
         </RelativeLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="加个标题..."
+            android:maxLength="30"
+            android:gravity="top"
+            android:singleLine="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/edit_text_message_selector"
+            android:textSize="16sp"
+            android:id="@+id/send_article_activity_et_title" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:hint="说点什么吧..."
+            android:id="@+id/send_article_activity_et_content"
             android:maxLength="200"
             android:gravity="top"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:background="@drawable/edit_text_message_selector"
             android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin" />
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@android:color/white"
-            android:id="@+id/send_message_activity_preview_ll"
+            android:id="@+id/send_article_activity_preview_ll"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="54dp"
                 android:layout_height="54dp"
                 android:clickable="true"
-                android:scaleType="fitXY"
-                android:id="@+id/send_message_activity_preview_iv_camera"
+                android:scaleType="center"
+                android:id="@+id/send_article_activity_preview_iv_camera"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="16dp"
+                android:src="@mipmap/ic_plus"
+                android:background="@drawable/ic_send_message_plus_selector" />
 
-                />
             <ImageView
                 android:layout_width="54dp"
                 android:layout_height="54dp"
@@ -95,12 +128,12 @@
                 android:scaleType="center"
                 android:id="@+id/send_message_activity_preview_iv_attachment"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="16dp"
+                android:src="@mipmap/ic_plus"
+                android:background="@drawable/ic_send_message_plus_selector" />
 
 
         </LinearLayout>
-
-
 
 
         <RelativeLayout
@@ -115,7 +148,7 @@
                 android:clickable="true"
                 android:src="@mipmap/ic_camera"
                 android:scaleType="center"
-                android:id="@+id/send_message_activity_tool_iv_camera" />
+                android:id="@+id/send_article_activity_tool_iv_camera" />
 
             <ImageView
                 android:layout_width="54dp"
@@ -124,8 +157,8 @@
                 android:src="@mipmap/ic_attachment"
                 android:clickable="true"
                 android:scaleType="center"
-                android:id="@+id/send_message_activity_tool_iv_attachment"
-                android:layout_toRightOf="@id/send_message_activity_tool_iv_camera" />
+                android:id="@+id/send_article_activity_tool_iv_attachment"
+                android:layout_toRightOf="@id/send_article_activity_tool_iv_camera" />
 
             <ImageView
                 android:layout_width="54dp"
@@ -134,10 +167,9 @@
                 android:src="@mipmap/ic_dots"
                 android:clickable="true"
                 android:scaleType="center"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentRight="true"
+                android:id="@+id/send_message_activity_iv_require" />
         </RelativeLayout>
-
-
 
 
     </LinearLayout>

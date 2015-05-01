@@ -23,16 +23,25 @@ import android.widget.TextView;
 
 import com.cqupt.adapter.ExpandableListAdapter;
 import com.cqupt.adapter.RecyclerAdapter;
+import com.cqupt.app.App;
+import com.cqupt.bean.AcceptArticle;
+import com.cqupt.bean.Circle;
 import com.cqupt.listener.HidingScrollListener;
+import com.cqupt.listener.HttpStateListener;
+import com.cqupt.tool.ArticleDBUtils;
+import com.cqupt.tool.HttpHandlerUtils;
+import com.cqupt.tool.JSONUtils;
+import com.cqupt.tool.UserDBUtils;
 import com.cqupt.tool.Utils;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements HttpStateListener {
     @ViewInject(R.id.main_activity_tb)
     private Toolbar mToolbar;
     @ViewInject(R.id.main_activity_rv)
@@ -52,39 +61,57 @@ public class MainActivity extends ActionBarActivity {
     private ImageView mCircleHeaderIcon;
     @ViewInject(R.id.main_activity_iv_user_photo)
     private ImageView mUserPhoto;
+    @ViewInject(R.id.main_activity_tx_user_name)
+    private TextView mUserName;
     @ViewInject(R.id.main_activity_sl)
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    // @ViewInject(R.layout.activity_main)
-    // private FrameLayout mRootFrameLayout;
+
+
+    private RecyclerAdapter mRecyclerAdapter;
+    private UserDBUtils userDBUtils;
+    private ArticleDBUtils articleDBUtils;
+    private List<AcceptArticle> articles;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ViewUtils.inject(this);
-        // mRootFrameLayout = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.activity_main,null);
         initToolbar();
         initSwipeRefreshLayout();
         initRecycler();
         initCircleLayout();
+        initDBUtils();
+        getArticleInfor();
+    }
+
+    private void initDBUtils() {
+        App app = App.getAppInstance();
+        userDBUtils = app.getUserDBUtils();
+        articleDBUtils = app.getArticleDBUtils();
+        String userName = userDBUtils.getUserName();
+        mUserName.setText(userName);
     }
 
     private void initSwipeRefreshLayout() {
         mSwipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.blue, R.color.green);
-        mSwipeRefreshLayout.setProgressViewOffset(false, 200, 240);
+        mSwipeRefreshLayout.setProgressViewOffset(true, 240, 270);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() {
-
+            public void onRefresh() {//刷新
+                LogUtils.e("去刷新了！");
+                getArticleInforFromWeb(articleDBUtils.getArticleNewerTime());
             }
         });
-
     }
 
     private void initExpandableListView() {
         if (mListView == null)
             mListView = (ExpandableListView) findViewById(R.id.main_activity_circle_layout_el);
-        mListView.setAdapter(new ExpandableListAdapter(this));
+        mListView.setAdapter(new ExpandableListAdapter(this, createCirclesList()));
         mListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i2, long l) {
@@ -92,6 +119,19 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             }
         });
+        mListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int i) {
+                if (i == 0)
+                    mListView.collapseGroup(0);
+            }
+        });
+
+    }
+
+    private List<Circle> createCirclesList() {
+        return userDBUtils.getUserCircles();
+
     }
 
     private void initCircleLayout() {
@@ -112,7 +152,7 @@ public class MainActivity extends ActionBarActivity {
     private void initRecycler() {
         mRecyclerView.setPadding(0, Utils.getToolbarHeight(this) * 2 + 5, 0, 0);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getApplicationContext()));
-        mRecyclerView.setAdapter(new RecyclerAdapter(createList()));
+//        mRecyclerView.setAdapter(new RecyclerAdapter(createList()));
         mRecyclerView.setOnScrollListener(new HidingScrollListener(this) {
 
             @Override
@@ -132,8 +172,6 @@ public class MainActivity extends ActionBarActivity {
             protected void onMove(int mToolbarOffset) {
                 mToolbarContainer.setTranslationY(-mToolbarOffset);
                 mSendToolContainer.setTranslationY(mToolbarOffset);
-
-
             }
         });
 
@@ -154,8 +192,12 @@ public class MainActivity extends ActionBarActivity {
                 AccelerateInterpolator(2)).start();
     }
 
-    private List<String> createList() {
-        return null;
+    private void createList() {
+        if (articles != null) {
+            mRecyclerAdapter = new RecyclerAdapter(articles);
+            mRecyclerView.setAdapter(mRecyclerAdapter);
+        }
+
     }
 
     private void initToolbar() {
@@ -187,6 +229,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+
     @OnClick({R.id.main_activity_circle_header_rl,
             R.id.main_activity_iv_send_message,
             R.id.main_activity_iv_user_photo
@@ -211,7 +254,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void goSendMessageActivity() {
-        Intent mIntent = new Intent(this, SendMessageActivity.class);
+        Intent mIntent = new Intent(this, SendArticleActivity.class);
         startActivity(mIntent);
     }
 
@@ -235,5 +278,61 @@ public class MainActivity extends ActionBarActivity {
         transition.setAnimator(LayoutTransition.APPEARING, transition.getAnimator(LayoutTransition.APPEARING));
         transition.setAnimator(LayoutTransition.DISAPPEARING, transition.getAnimator(LayoutTransition.DISAPPEARING));
         mRootLayout.setLayoutTransition(transition);
+    }
+
+
+    @Override
+    public void loginOrRegisterState(String loginState) {
+
+
+    }
+
+    /**
+     * 获取文章回调
+     */
+    @Override
+    public void refreshArticleState(String refreshState) {
+        ///还未处理数据刷新动态添加
+        mSwipeRefreshLayout.setRefreshing(false);
+        if (refreshState.equals("false"))
+            return;
+        articles = JSONUtils.parseList(refreshState, "logicArticles", AcceptArticle.class);
+//        for (Article article : articles) {
+//            LogUtils.e(" 网络返回的数据Article遍历 :  " + article);
+//        }
+        if (mRecyclerAdapter != null & !articles.toString().equals("[]")) {
+            LogUtils.e(" 这时候是处理刷新数据的 " + articles);
+            mRecyclerAdapter.addArticles(articles);
+        } else if (mRecyclerAdapter == null & !articles.toString().equals("[]")) {
+            LogUtils.e(" 这时候是处理网络请求数据的 " + articles);
+            createList();
+        }
+        if (articles != null)
+            articleDBUtils.saveArticleToDb(this, articles);
+        LogUtils.e("网络返回的数据:  " + articles);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    public void getArticleInfor() {
+        //1.先检查数据库中是否有缓存
+        articles = articleDBUtils.getArticlesFromDb();
+        if (articles != null) {
+            LogUtils.e("数据库中有缓存!!!");
+            createList();
+        } else {
+            //2.去网络获取数据
+            getArticleInforFromWeb("0");
+        }
+    }
+    public void getArticleInforFromWeb(String time) {
+        HttpHandlerUtils httpHandlerUtils = HttpHandlerUtils.getInstance();
+        httpHandlerUtils.setHttpStateListener(this);
+        String userUUID = userDBUtils.getUserId();
+        LogUtils.e("去请求网络！！  userUUID is :" + userUUID);
+        httpHandlerUtils.postRefreshArticle(App.downLoadURL, "article", userUUID, "all", "0", time);
     }
 }

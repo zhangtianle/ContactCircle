@@ -9,7 +9,9 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cqupt.bean.Circle;
 import com.cqupt.contactcircle.R;
+import com.lidroid.xutils.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +25,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private LayoutInflater mChildrenInflater;
     private List<String> mFatherData;
     private List<List<String>> mChildrenData;
+    private List<Circle> mCircles;
 
-    public ExpandableListAdapter(Context context) {
+    public ExpandableListAdapter(Context context, List<Circle> circles) {
         this.mContext = context;
+        this.mCircles = circles;
         mFatherInflater = LayoutInflater.from(mContext);
         mChildrenInflater = LayoutInflater.from(mContext);
         initData();
-
     }
 
     private void initData() {
@@ -37,27 +40,30 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         mChildrenData = new ArrayList<List<String>>();
 
         mFatherData.add("首页");
-        mFatherData.add("朋友");
-        mFatherData.add("圈子");
+        mFatherData.add("关注好友");
+        mFatherData.add("联络圈");
 
-        List<String> one1 = new ArrayList<String>();
-        one1.add("郊区");
-        one1.add("市区");
-        one1.add("农村");
+//        List<String> one1 = new ArrayList<String>();
+//        one1.add("xx");
+//        one1.add("xx");
+//        one1.add("xx");
 
-        mChildrenData.add(one1);
+        mChildrenData.add(null);
+
 
         List<String> two1 = new ArrayList<String>();
-        two1.add("大众");
-        two1.add("奔驰");
-        two1.add("QQ");
+//        for (Circle c : mCircles)
+//            two1.add(c.getCircleName());
+        LogUtils.e("mCircles.size() : " + mCircles.size());
+
+        two1.add("XXX");
+        two1.add("XX");
+        two1.add("X");
         mChildrenData.add(two1);
 
         List<String> one2 = new ArrayList<String>();
-        one2.add("手机");
-        one2.add("电脑");
-        one2.add("电视");
-
+        for (Circle c : mCircles)
+            one2.add(c.getCircleName());
         mChildrenData.add(one2);
 
     }
@@ -72,7 +78,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     //重写的方法，用于获取父层中其中一层的子数目
     @Override
     public int getChildrenCount(int i) {
-        return mChildrenData == null ? 0 : mChildrenData.size();
+        return mChildrenData.get(i) == null ? 0 : mChildrenData.get(i).size();
     }
 
     //重写的方法，用于获取父层中的一项，返回的是父层的字符串类型

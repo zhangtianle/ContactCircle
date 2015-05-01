@@ -10,22 +10,26 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.cqupt.app.App;
+import com.cqupt.bean.Circle;
 import com.cqupt.bean.User;
-import com.cqupt.listener.LoginStateListener;
-import com.cqupt.tool.UserInforDBUtils;
+import com.cqupt.listener.HttpStateListener;
 import com.cqupt.tool.HttpHandlerUtils;
+import com.cqupt.tool.JSONUtils;
+import com.cqupt.tool.UserDBUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
 
+import java.util.List;
+
+
 /**
  * Created by ls on 15-4-20.
  */
-public class RegisterActivity extends Activity implements LoginStateListener, AdapterView.OnItemSelectedListener {
+public class RegisterActivity extends Activity implements HttpStateListener, AdapterView.OnItemSelectedListener {
 
     @ViewInject(R.id.register_activity_et_student_name)
     private EditText mUserNameEditText;
@@ -39,7 +43,7 @@ public class RegisterActivity extends Activity implements LoginStateListener, Ad
     private EditText mUserClassEditText;
 
     private String userCollege = "通信与信息工程学院";
-    private UserInforDBUtils dbUtils;
+    private UserDBUtils dbUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,8 @@ public class RegisterActivity extends Activity implements LoginStateListener, Ad
         setContentView(R.layout.activity_register);
         ViewUtils.inject(this);
         initSpinner();
-        dbUtils = new UserInforDBUtils(this);
+        dbUtils = App.getAppInstance().getUserDBUtils();
+
 
     }
 
@@ -78,7 +83,9 @@ public class RegisterActivity extends Activity implements LoginStateListener, Ad
 
     }
 
-
+    /**
+     * 注册
+     */
     private void register() {
         String userNum = mUserNumEditText.getText().toString();
         String userPassWord = mUserPassWordEditText.getText().toString();
@@ -88,31 +95,59 @@ public class RegisterActivity extends Activity implements LoginStateListener, Ad
             Toast.makeText(this, "请正确输入注册信息", Toast.LENGTH_SHORT).show();
             return;
         }
-        User user = new User(userName, userPassWord, userNum,null, userClass, userCollege,null);
-        String jsonString = JSON.toJSONString(user);
-
+//        ArrayList<Circle> circles = new ArrayList<>();
+//        circles.add(new Circle("2012210625", "01", "通信学院"));
+//        circles.add(new Circle("2012210625", "02", "计算机学院"));
+//        circles.add(new Circle("2012210625", "03", "自动化学院"));
+        User user = new User(userName, userPassWord, userNum, null, userClass, userCollege, null, null);
+        String jsonString = JSONUtils.getJsonString(user);
         LogUtils.e("register jsonString   " + jsonString);
         HttpHandlerUtils httpHandlerUtils = HttpHandlerUtils.getInstance();
-        httpHandlerUtils.setLoginStateListener(this);
+        httpHandlerUtils.setHttpStateListener(this);
         if (jsonString != null)
-            httpHandlerUtils.postInfor(App.url, "register", jsonString);
+            httpHandlerUtils.postLoginOrRegisterInfor(App.downLoadURL, "register", jsonString);
+        //testdb(jsonString);
 
     }
 
+    private void testdb(String loginState) {
 
+        User user = JSONUtils.parseObject(loginState, User.class);
+        // List<Circle> circles = JSONUtils.parseList(loginState, "circles", Circle.class);
+//        dbUtils.clearUserInfor();
+//        dbUtils.saveUserInforToDb(user);
+//        dbUtils.clearUserCircles();
+//        dbUtils.saveUserCirclesToDb(circles);
+        LogUtils.e(" user is  :  " + user);
+    }
+
+    /**
+     * 注册成功回调
+     */
     @Override
-    public void loginState(String loginState) {
+    public void loginOrRegisterState(String loginState) {
         LogUtils.e(" register state :  " + loginState);
         if (loginState.equals("false")) {
             Toast.makeText(this, "注册失败", Toast.LENGTH_SHORT).show();
             LogUtils.e(" register state :  " + " 注册失败");
         } else {
             goToOtherActivity(MainActivity.class);
-            User user = JSON.parseObject(loginState, User.class);
+            User user = JSONUtils.parseObject(loginState, User.class);
+            List<Circle> circles = JSONUtils.parseList(loginState, "circles", Circle.class);
             dbUtils.clearUserInfor();
-            dbUtils.saveUserToDb(this, user);
+            dbUtils.saveUserInforToDb(user);
+            dbUtils.clearUserCircles();
+            dbUtils.saveUserCirclesToDb(circles);
+            if (circles != null)
+                LogUtils.e(" user is  :  " + user + "   circles  is :" + circles.get(0));
         }
     }
+
+    @Override
+    public void refreshArticleState(String refreshState) {
+
+    }
+
 
     private void goToOtherActivity(Class activity) {
         Intent intent = new Intent(this, activity);
@@ -133,7 +168,7 @@ public class RegisterActivity extends Activity implements LoginStateListener, Ad
 
     @Override
     protected void onDestroy() {
-        dbUtils.closeUserInforDbUtils();
+        // dbUtils.closeUserDbUtils();
         super.onDestroy();
     }
 }

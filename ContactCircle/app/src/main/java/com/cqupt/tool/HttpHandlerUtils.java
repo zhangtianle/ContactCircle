@@ -1,6 +1,13 @@
 package com.cqupt.tool;
 
-import com.cqupt.listener.LoginStateListener;
+import android.app.Activity;
+import android.content.Context;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.cqupt.app.App;
+import com.cqupt.contactcircle.R;
+import com.cqupt.listener.HttpStateListener;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
@@ -11,6 +18,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by ls on 15-4-19.
@@ -19,7 +27,7 @@ public class HttpHandlerUtils {
     private static final HttpHandlerUtils httpHandlerUtils = new HttpHandlerUtils();
 
 
-    private LoginStateListener loginStateListener;
+    private HttpStateListener httpStateListener;
 
     private HttpHandlerUtils() {
 
@@ -38,7 +46,7 @@ public class HttpHandlerUtils {
 //
 //        HttpUtils http = new HttpUtils();
 //        http.send(HttpRequest.HttpMethod.GET,
-//                url,
+//                downLoadURL,
 //                params,
 //                new RequestCallBack<String>() {
 //                    @Override
@@ -58,7 +66,7 @@ public class HttpHandlerUtils {
 //        HttpUtils http = new HttpUtils();
 //        http.configCurrentHttpCacheExpiry(1000 * 10);
 //        http.send(HttpRequest.HttpMethod.GET,
-//                url,
+//                downLoadURL,
 //                new RequestCallBack<String>() {
 //
 //                    @Override
@@ -122,23 +130,10 @@ public class HttpHandlerUtils {
     }
 
 
-    public void postInfor(String url, String inforType, String infor) {
+    public void postLoginOrRegisterInfor(String url, String inforType, String infor) {
         RequestParams params = new RequestParams();
-        //params.addHeader("name", "value");
-        //   params.addQueryStringParameter("type", "register");
-        //  params.addQueryStringParameter("registerInfor", "lishuang");
-// 只包含字符串参数时默认使用BodyParamsEntity，
-// 类似于UrlEncodedFormEntity（"application/x-www-form-urlencoded"）。
         params.addBodyParameter("type", inforType);
         params.addBodyParameter("registerInfor", infor);
-// 加入文件参数后默认使用MultipartEntity（"multipart/form-data"），
-// 如需"multipart/related"，xUtils中提供的MultipartEntity支持设置subType为"related"。
-// 使用params.setBodyEntity(httpEntity)可设置更多类型的HttpEntity（如：
-// MultipartEntity,BodyParamsEntity,FileUploadEntity,InputStreamUploadEntity,StringEntity）。
-// 例如发送json参数：params.setBodyEntity(new StringEntity(jsonStr,charset));
-        //      params.addBodyParameter("file", new File("path"));
-
-
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST,
                 url,
@@ -152,55 +147,75 @@ public class HttpHandlerUtils {
 
                     @Override
                     public void onLoading(long total, long current, boolean isUploading) {
-                        if (isUploading) {
-                            //     testTextView.setText("upload: " + current + "/" + total);
-                        } else {
-                            //  testTextView.setText("reply: " + current + "/" + total);
-                        }
-                        //  System.out.println("onLoading");
                         LogUtils.e("onLoading()   ");
                     }
 
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
-                        //testTextView.setText("reply: " + responseInfo.result);
                         LogUtils.e("onSuccess()   " + responseInfo.result);
-                        // System.out.println("onSuccess   " + responseInfo.result);
-                        if (loginStateListener != null) {
-                            loginStateListener.loginState(responseInfo.result);
+                        if (httpStateListener != null) {
+                            httpStateListener.loginOrRegisterState(responseInfo.result);
                         }
                     }
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        //testTextView.setText(error.getExceptionCode() + ":" + msg);
-                        // System.out.println("onFailure" + msg);
                         LogUtils.e("onFailure()   " + msg);
                     }
                 });
+    }
 
+    public void sendArticleInfor(String url, String infor) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("type", "uploadArticle");
+        params.addBodyParameter("article", infor);
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                url,
+                params,
+                new RequestCallBack<String>() {
 
+                    @Override
+                    public void onStart() {
+                        LogUtils.e("onStart()   ");
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                        LogUtils.e("onLoading()   ");
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        LogUtils.e("onSuccess()   " + responseInfo.result);
+                        if (httpStateListener != null) {
+                            httpStateListener.refreshArticleState("success");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        if (httpStateListener != null) {
+                            httpStateListener.refreshArticleState("failure");
+                        }
+                        ;
+                    }
+                });
     }
 
 
-    public void upLaod(String url, File file) {
+    public void upLoad(final Activity activity, String url, List<File> files, String article) {
 
         RequestParams params = new RequestParams();
-        //   params.addHeader("type", "upload");
-        //   params.addQueryStringParameter("type", "register");
-        //  params.addQueryStringParameter("registerInfor", "lishuang");
-// 只包含字符串参数时默认使用BodyParamsEntity，
-// 类似于UrlEncodedFormEntity（"application/x-www-form-urlencoded"）。
-        params.addBodyParameter("asdfg", "/888888");
-
-// 加入文件参数后默认使用MultipartEntity（"multipart/form-data"），
-// 如需"multipart/related"，xUtils中提供的MultipartEntity支持设置subType为"related"。
-// 使用params.setBodyEntity(httpEntity)可设置更多类型的HttpEntity（如：
-// MultipartEntity,BodyParamsEntity,FileUploadEntity,InputStreamUploadEntity,StringEntity）。
-// 例如发送json参数：params.setBodyEntity(new StringEntity(jsonStr,charset));
-        params.addBodyParameter("file", file);
-
-
+        params.addBodyParameter("article", article);
+        if (files.size() == 0) {
+            sendArticleInfor(App.downLoadURL, article);
+            return;
+        }
+        for (int i = 0; i < files.size(); i++) {
+            params.addBodyParameter("file" + i, files.get(i));
+            LogUtils.e("   file   " + i);
+        }
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST,
                 url,
@@ -214,34 +229,34 @@ public class HttpHandlerUtils {
 
                     @Override
                     public void onLoading(long total, long current, boolean isUploading) {
-                        if (isUploading) {
-                            //     testTextView.setText("upload: " + current + "/" + total);
-                        } else {
-                            //  testTextView.setText("reply: " + current + "/" + total);
-                        }
-                        System.out.println("上传onLoading");
+                        LogUtils.e("上传onLoading" + current + "/" + total);
                     }
 
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
-                        //testTextView.setText("reply: " + responseInfo.result);
-                        System.out.println("上传onSuccess   " + responseInfo.result);
+                        LogUtils.e("上传onSuccess   " + responseInfo.result);
+                        if (httpStateListener != null) {
+                            httpStateListener.refreshArticleState("success");
+                        }
+
                     }
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        //testTextView.setText(error.getExceptionCode() + ":" + msg);
-                        System.out.println("上传onFailure" + msg);
+                        LogUtils.e("上传onFailure" + msg);
+                        if (httpStateListener != null) {
+                            httpStateListener.refreshArticleState("failure");
+                        }
                     }
                 });
     }
 
-    public LoginStateListener getLoginStateListener() {
-        return loginStateListener;
+    public HttpStateListener getHttpStateListener() {
+        return httpStateListener;
     }
 
-    public void setLoginStateListener(LoginStateListener loginStateListener) {
-        this.loginStateListener = loginStateListener;
+    public void setHttpStateListener(HttpStateListener httpStateListener) {
+        this.httpStateListener = httpStateListener;
     }
 
 
@@ -252,8 +267,8 @@ public class HttpHandlerUtils {
 //        String twoHyphens = "--";
 //        String boundary = "******";
 //        try {
-//            URL url = new URL(uploadUrl);
-//            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+//            URL downLoadURL = new URL(uploadUrl);
+//            HttpURLConnection httpURLConnection = (HttpURLConnection) downLoadURL.openConnection();
 //            httpURLConnection.setDoInput(true);
 //            httpURLConnection.setDoOutput(true);
 //            httpURLConnection.setUseCaches(false);
@@ -296,6 +311,45 @@ public class HttpHandlerUtils {
 //        }
 //
 //    }
+
+
+    public void postRefreshArticle(String url, String inforType, String userUUID, String circle, String page, String time) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("type", inforType);
+        params.addBodyParameter("userUUID", userUUID);
+        params.addBodyParameter("circle", circle);
+        params.addBodyParameter("page", page);
+        params.addBodyParameter("time", time);
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                url,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                        LogUtils.e("onStart()   ");
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                        LogUtils.e("postRefreshArticle onLoading()   ");
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        LogUtils.e("postRefreshArticle onSuccess()   " + responseInfo.result);
+                        if (httpStateListener != null) {
+                            httpStateListener.refreshArticleState(responseInfo.result);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        LogUtils.e("postRefreshArticle onFailure()   " + msg);
+                    }
+                });
+    }
 
 }
 
