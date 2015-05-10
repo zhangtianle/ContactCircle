@@ -39,16 +39,35 @@ public class Circle {
     }
 
 
-
     @Override
     public String toString() {
-        return "{" +
+        return "Circle{" +
                 "userUUID='" + userUUID + '\'' +
                 ", id='" + id + '\'' +
                 ", circleName='" + circleName + '\'' +
+                ", circleHead='" + circleHead + '\'' +
                 '}';
     }
+
     private String userUUID;
     private String id;
     private String circleName;
+    private String circleHead;
+
+    public String getCircleHead() {
+        return circleHead;
+    }
+
+    public void setCircleHead(String circleHead) {
+        this.circleHead = circleHead;
+    }
+
+
+    public Circle(String userUUID, String circleName, String id, String circleHead) {
+        this.userUUID = userUUID;
+        this.circleName = circleName;
+        this.id = id;
+        this.circleHead = circleHead;
+
+    }
 }

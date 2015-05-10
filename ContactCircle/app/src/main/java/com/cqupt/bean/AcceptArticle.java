@@ -1,13 +1,22 @@
 package com.cqupt.bean;
 
 
-
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by ls on 15-4-20.
  */
-public class AcceptArticle {
+public class AcceptArticle implements Serializable {
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     public String getId() {
         return id;
     }
@@ -16,12 +25,68 @@ public class AcceptArticle {
         this.id = id;
     }
 
+    public int getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(int attachments) {
+        this.attachments = attachments;
+    }
+
+    public int getZanCount() {
+        return zanCount;
+    }
+
+    public void setZanCount(int zanCount) {
+        this.zanCount = zanCount;
+    }
+
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getComments() {
+        return comments;
+    }
+
+    public void setComments(int comments) {
+        this.comments = comments;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCircle() {
+        return circle;
+    }
+
+    public void setCircle(String circle) {
+        this.circle = circle;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
+    public String getUserHead() {
+        return userHead;
+    }
+
+    public void setUserHead(String userHead) {
+        this.userHead = userHead;
     }
 
     public String getTitle() {
@@ -40,68 +105,27 @@ public class AcceptArticle {
         this.name = name;
     }
 
-    public String getTime() {
-        return time;
-    }
 
-    public void setTime(String time) {
+    public AcceptArticle(String id, String time, int zanCount, String content, int attachments, int comments, String circle, String type, String photoURL, String userHead, String name, String title) {
+        this.id = id;
         this.time = time;
-    }
-
-    public int getZanCount() {
-        return zanCount;
-    }
-
-    public void setZanCount(int zanCount) {
         this.zanCount = zanCount;
-    }
-
-    public List<Attachment> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(List<Attachment> attachments) {
+        this.content = content;
         this.attachments = attachments;
-    }
-
-    public String getCircle() {
-        return circle;
-    }
-
-    public void setCircle(String circle) {
-        this.circle = circle;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
+        this.circle = circle;
         this.type = type;
-    }
-
-    public String getPhotoURL() {
-        return photoURL;
-    }
-
-    public void setPhotoURL(String photoURL) {
         this.photoURL = photoURL;
+        this.userHead = userHead;
+        this.name = name;
+        this.title = title;
     }
+
 
     @Override
     public String toString() {
-        return "Article{" +
+        return "AcceptArticle{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", title='" + title + '\'' +
                 ", time='" + time + '\'' +
                 ", content='" + content + '\'' +
                 ", zanCount=" + zanCount +
@@ -110,22 +134,29 @@ public class AcceptArticle {
                 ", circle='" + circle + '\'' +
                 ", type='" + type + '\'' +
                 ", photoURL='" + photoURL + '\'' +
+                ", userHead='" + userHead + '\'' +
+                ", name='" + name + '\'' +
+                ", title='" + title + '\'' +
                 '}';
     }
 
+    public AcceptArticle() {
+
+    }
+
+
     private String id;
-    private String name;
-    private String title;
     private String time;
     private String content;
     private int zanCount;
-    private List<Attachment> attachments;
-    private List<Comment> comments;
+    private int attachments;
+    private int comments;
     private String circle;
     private String type;
     private String photoURL;
-    public AcceptArticle(){
+    private String userHead;
+    private String name;
+    private String title;
 
-    }
 
 }

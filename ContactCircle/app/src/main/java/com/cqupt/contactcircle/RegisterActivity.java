@@ -102,7 +102,7 @@ public class RegisterActivity extends Activity implements HttpStateListener, Ada
         User user = new User(userName, userPassWord, userNum, null, userClass, userCollege, null, null);
         String jsonString = JSONUtils.getJsonString(user);
         LogUtils.e("register jsonString   " + jsonString);
-        HttpHandlerUtils httpHandlerUtils = HttpHandlerUtils.getInstance();
+        HttpHandlerUtils httpHandlerUtils =new HttpHandlerUtils();
         httpHandlerUtils.setHttpStateListener(this);
         if (jsonString != null)
             httpHandlerUtils.postLoginOrRegisterInfor(App.downLoadURL, "register", jsonString);
@@ -125,7 +125,7 @@ public class RegisterActivity extends Activity implements HttpStateListener, Ada
      * 注册成功回调
      */
     @Override
-    public void loginOrRegisterState(String loginState) {
+    public void postState(String loginState) {
         LogUtils.e(" register state :  " + loginState);
         if (loginState.equals("false")) {
             Toast.makeText(this, "注册失败", Toast.LENGTH_SHORT).show();

@@ -29,6 +29,29 @@ public class Attachment {
     }
 
 
+    public Attachment(String id, String articleUUID, String attachURL, String attachName) {
+        this.id = id;
+        this.articleUUID = articleUUID;
+        this.attachURL = attachURL;
+        this.attachName = attachName;
+    }
+
+
+    public String getArticleUUID() {
+        return articleUUID;
+    }
+
+    public void setArticleUUID(String articleUUID) {
+        this.articleUUID = articleUUID;
+    }
+
+
+    public  Attachment(){
+
+    }
+    private String id;
+    private String attachName;
+    private String attachURL;
 
     @Override
     public String toString() {
@@ -36,13 +59,9 @@ public class Attachment {
                 "id='" + id + '\'' +
                 ", attachName='" + attachName + '\'' +
                 ", attachURL='" + attachURL + '\'' +
+                ", articleUUID='" + articleUUID + '\'' +
                 '}';
     }
-    private String id;
-    private String attachName;
-    private String attachURL;
 
-    public  Attachment(){
-
-    }
+    private String articleUUID;
 }

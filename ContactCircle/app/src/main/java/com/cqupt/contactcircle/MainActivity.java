@@ -23,16 +23,20 @@ import android.widget.TextView;
 
 import com.cqupt.adapter.ExpandableListAdapter;
 import com.cqupt.adapter.RecyclerAdapter;
+import com.cqupt.adapter.RecyclerViewHolder;
 import com.cqupt.app.App;
 import com.cqupt.bean.AcceptArticle;
 import com.cqupt.bean.Circle;
+import com.cqupt.bean.Friend;
 import com.cqupt.listener.HidingScrollListener;
 import com.cqupt.listener.HttpStateListener;
+import com.cqupt.tool.ArticleBitmapHandlerUtils;
 import com.cqupt.tool.ArticleDBUtils;
 import com.cqupt.tool.HttpHandlerUtils;
 import com.cqupt.tool.JSONUtils;
 import com.cqupt.tool.UserDBUtils;
 import com.cqupt.tool.Utils;
+import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
@@ -65,14 +69,22 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
     private TextView mUserName;
     @ViewInject(R.id.main_activity_sl)
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    @ViewInject(R.id.main_activity_circle_tx_search)
+    private TextView mSearcherTextView;
 
 
     private RecyclerAdapter mRecyclerAdapter;
     private UserDBUtils userDBUtils;
     private ArticleDBUtils articleDBUtils;
+    private BitmapUtils mBitmapUtils;
     private List<AcceptArticle> articles;
-
-
+    private HttpHandlerUtils httpHandlerUtils;
+    private AcceptArticle praiseAcceptArticle;
+    private TextView mArticleZanCounts;
+    private List<Friend> friends;
+    private List<Circle> circles;
+    private boolean otherCircles;
+    private String userUUID;
 
 
     @Override
@@ -84,16 +96,20 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
         initSwipeRefreshLayout();
         initRecycler();
         initCircleLayout();
-        initDBUtils();
+        initUtils();
         getArticleInfor();
     }
 
-    private void initDBUtils() {
+    private void initUtils() {
         App app = App.getAppInstance();
         userDBUtils = app.getUserDBUtils();
         articleDBUtils = app.getArticleDBUtils();
         String userName = userDBUtils.getUserName();
+        userUUID = userDBUtils.getUserId();
         mUserName.setText(userName);
+        mBitmapUtils = ArticleBitmapHandlerUtils.getBitmapUtils(this.getApplicationContext());
+        httpHandlerUtils = new HttpHandlerUtils();
+        httpHandlerUtils.setHttpStateListener(this);
     }
 
     private void initSwipeRefreshLayout() {
@@ -103,7 +119,7 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
             @Override
             public void onRefresh() {//刷新
                 LogUtils.e("去刷新了！");
-                getArticleInforFromWeb(articleDBUtils.getArticleNewerTime());
+                getArticleInforFromWeb(articleDBUtils.getArticleNewerTime(), "all");
             }
         });
     }
@@ -111,26 +127,47 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
     private void initExpandableListView() {
         if (mListView == null)
             mListView = (ExpandableListView) findViewById(R.id.main_activity_circle_layout_el);
-        mListView.setAdapter(new ExpandableListAdapter(this, createCirclesList()));
+        mListView.setAdapter(new ExpandableListAdapter(this, createCirclesList(), createFriendsList()));///////////////////////////在这里处理好友
         mListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i2, long l) {
-                System.out.println("item click fathre " + i + " children " + i2);
+                LogUtils.e("item click fathre " + i + " children " + i2);
+                switch (i) {
+                    case 1:
+                        getArticleInforFromWeb("0", circles.get(i2).getId());
+                        mCircleHeaderName.setText(circles.get(i2).getCircleName());
+                        showOrHideCircleLayout();
+                        otherCircles = true;
+                        break;
+                    case 0://处理个人信息展示
+                        userUUID = friends.get(i2).getId();
+                        otherCircles = false;
+                        LogUtils.e("要战士的用户名：" + friends.get(i2).getName() + "  id是：" + userUUID);
+                        goToUserInformationActivity(UserInformationActivity.class);
+                        break;
+                }
                 return true;
             }
         });
-        mListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+        findViewById(R.id.main_activity_circle_tx_first_page).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onGroupExpand(int i) {
-                if (i == 0)
-                    mListView.collapseGroup(0);
+            public void onClick(View view) {
+                mCircleHeaderName.setText("首页");
+                otherCircles = false;
+                getArticleInfor();
+                showOrHideCircleLayout();
             }
         });
+    }
 
+    private List<Friend> createFriendsList() {
+        friends = userDBUtils.getUserFriend();
+        return friends;
     }
 
     private List<Circle> createCirclesList() {
-        return userDBUtils.getUserCircles();
+        circles = userDBUtils.getUserCircles();
+        return circles;
 
     }
 
@@ -139,6 +176,12 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams.gravity = Gravity.TOP;
         layoutParams.topMargin = Utils.getToolbarHeight(this) * 2;
+        mCircleLayout.findViewById(R.id.main_activity_circle_tx_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToSearchActivity();
+            }
+        });
         mCircleLayout.setLayoutParams(layoutParams);
         mCircleLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -175,7 +218,6 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
             }
         });
 
-
     }
 
     private void show() {
@@ -193,10 +235,41 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
     }
 
     private void createList() {
-        if (articles != null) {
-            mRecyclerAdapter = new RecyclerAdapter(articles);
-            mRecyclerView.setAdapter(mRecyclerAdapter);
-        }
+
+        if (mRecyclerAdapter == null)
+            mRecyclerAdapter = new RecyclerAdapter(articles, this.getApplicationContext());
+        else
+            mRecyclerAdapter.addOtherCirclesArticles(articles);
+
+        mRecyclerAdapter.setOnItemClickListener(new RecyclerViewHolder.MyClickListener() {
+            @Override
+            public void onClickRootView(View view, int position) {
+                LogUtils.e("被点击！！root ：" + position);
+                goToArticleInforActivity(position);
+            }
+
+            @Override
+            public void onClickPraiseView(View view, int position) {
+                articles = articleDBUtils.getArticlesFromDb();
+                praiseAcceptArticle = articles.get(position);
+                mArticleZanCounts = ((TextView) view);
+                mArticleZanCounts.setText((praiseAcceptArticle.getZanCount() + 1) + "");
+                LogUtils.e("被点击！！praise: " + position + "   articleID is : " + praiseAcceptArticle.getId());
+                httpHandlerUtils.postPraise(App.downLoadURL, "zan", articles.get(position).getId());
+                mArticleZanCounts.setSelected(true);
+                mArticleZanCounts.setClickable(false);
+            }
+        });
+        mRecyclerView.setAdapter(mRecyclerAdapter);
+
+
+    }
+
+    private void goToArticleInforActivity(int position) {
+        Intent intent = new Intent();
+        intent.putExtra("position", position);
+        intent.setClass(this, ArticleInforActivity.class);
+        startActivity(intent);
 
     }
 
@@ -210,6 +283,7 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
         return true;
     }
 
@@ -221,7 +295,14 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+
+            return true;
+        } else if (id == R.id.action_exit) {
+            userDBUtils.clearUserInfor();
+            articleDBUtils.clearArticleDb();
+            startActivity(new Intent(this, LoginActivity.class));
+            this.finish();
             return true;
         }
 
@@ -229,10 +310,11 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
     }
 
 
-
     @OnClick({R.id.main_activity_circle_header_rl,
             R.id.main_activity_iv_send_message,
-            R.id.main_activity_iv_user_photo
+            R.id.main_activity_iv_user_photo,
+            R.id.main_activity_circle_tx_search,
+            R.id.main_activity_circle_tx_first_page
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -243,13 +325,26 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
                 goSendMessageActivity();
                 break;
             case R.id.main_activity_iv_user_photo:
-                goToUserInformationActivity();
+                otherCircles = true;
+                userUUID = "";
+                goToUserInformationActivity(UserInformationActivity.class);
                 break;
+            case R.id.main_activity_circle_tx_search:
+                goToSearchActivity();
+                break;
+
         }
     }
 
-    private void goToUserInformationActivity() {
-        Intent intent = new Intent(MainActivity.this, UserInformation.class);
+    private void goToSearchActivity() {
+        LogUtils.e("click is : ");
+        startActivity(new Intent(MainActivity.this, SearchActivity.class));
+    }
+
+    private void goToUserInformationActivity(Class activityClass) {
+        Intent intent = new Intent(MainActivity.this, activityClass);
+        intent.putExtra("otherCircles", otherCircles);
+        intent.putExtra("userUUID", userUUID);
         startActivity(intent);
     }
 
@@ -273,6 +368,7 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
         }
     }
 
+
     private void prepareCircleLayoutInAnim() {
         LayoutTransition transition = new LayoutTransition();
         transition.setAnimator(LayoutTransition.APPEARING, transition.getAnimator(LayoutTransition.APPEARING));
@@ -282,9 +378,13 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
 
 
     @Override
-    public void loginOrRegisterState(String loginState) {
-
-
+    public void postState(String loginState) {
+        if (loginState != null && !loginState.equals("")) {
+            LogUtils.e("赞的返回值：" + loginState);
+            praiseAcceptArticle.setZanCount(Integer.parseInt(loginState));
+            articleDBUtils.updateZanCounts(praiseAcceptArticle);
+            mArticleZanCounts.setText(loginState);
+        }
     }
 
     /**
@@ -292,24 +392,31 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
      */
     @Override
     public void refreshArticleState(String refreshState) {
-        ///还未处理数据刷新动态添加
+        articles = JSONUtils.parseList(refreshState, "logicArticles", AcceptArticle.class);
         mSwipeRefreshLayout.setRefreshing(false);
         if (refreshState.equals("false"))
             return;
-        articles = JSONUtils.parseList(refreshState, "logicArticles", AcceptArticle.class);
-//        for (Article article : articles) {
-//            LogUtils.e(" 网络返回的数据Article遍历 :  " + article);
-//        }
-        if (mRecyclerAdapter != null & !articles.toString().equals("[]")) {
+
+
+
+        if (otherCircles) {
+            if (articles != null && articles.size() > 0)
+                createList();
+            else//处理没数据的情况
+                mRecyclerAdapter.removeAllDatas();
+            return;
+        }
+
+        if (mRecyclerAdapter != null && articles != null && !articles.toString().equals("[]")) {//处理首页数据刷新
             LogUtils.e(" 这时候是处理刷新数据的 " + articles);
             mRecyclerAdapter.addArticles(articles);
-        } else if (mRecyclerAdapter == null & !articles.toString().equals("[]")) {
-            LogUtils.e(" 这时候是处理网络请求数据的 " + articles);
+        } else if (mRecyclerAdapter == null && articles != null && !articles.toString().equals("[]")) {//处理其他圈子数据的
+            LogUtils.e(" 这时候是处理其他圈子数据的 " + articles);
             createList();
         }
-        if (articles != null)
-            articleDBUtils.saveArticleToDb(this, articles);
-        LogUtils.e("网络返回的数据:  " + articles);
+        if (articles != null && !articles.toString().equals("[]")) {
+            articleDBUtils.saveArticleToDb(articles);
+        }
     }
 
     @Override
@@ -317,22 +424,25 @@ public class MainActivity extends ActionBarActivity implements HttpStateListener
         super.onDestroy();
     }
 
+
     public void getArticleInfor() {
         //1.先检查数据库中是否有缓存
         articles = articleDBUtils.getArticlesFromDb();
-        if (articles != null) {
+        if (articles != null && articles.size() > 0) {
             LogUtils.e("数据库中有缓存!!!");
             createList();
+            for (AcceptArticle acceptArticle : articles) {
+                LogUtils.e("数据库中的文章数据是： " + acceptArticle.toString());
+            }
         } else {
             //2.去网络获取数据
-            getArticleInforFromWeb("0");
+            getArticleInforFromWeb("0", "all");
         }
     }
-    public void getArticleInforFromWeb(String time) {
-        HttpHandlerUtils httpHandlerUtils = HttpHandlerUtils.getInstance();
-        httpHandlerUtils.setHttpStateListener(this);
+
+    public void getArticleInforFromWeb(String time, String circle) {
         String userUUID = userDBUtils.getUserId();
         LogUtils.e("去请求网络！！  userUUID is :" + userUUID);
-        httpHandlerUtils.postRefreshArticle(App.downLoadURL, "article", userUUID, "all", "0", time);
+        httpHandlerUtils.postRefreshArticle(App.downLoadURL, "article", userUUID, circle, "0", time);
     }
 }

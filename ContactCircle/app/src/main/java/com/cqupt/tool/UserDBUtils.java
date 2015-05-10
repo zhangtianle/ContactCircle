@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.cqupt.bean.Circle;
+import com.cqupt.bean.Friend;
 import com.cqupt.bean.User;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -20,14 +21,17 @@ public class UserDBUtils {
 
     private DbUtils mUserInforDbUtils;
     private DbUtils mUserCircleDbUtils;
-
+    private DbUtils mUserFriendDbUtils;
 
     public UserDBUtils(Context context) {
+
         DbUtils.DaoConfig config = new DbUtils.DaoConfig(context);
         config.setDbName("user.db");
         mUserInforDbUtils = DbUtils.create(config);
         config.setDbName("circle.db");
         mUserCircleDbUtils = DbUtils.create(config);
+        config.setDbName("friend.db");
+        mUserFriendDbUtils = DbUtils.create(config);
 
     }
 
@@ -44,6 +48,8 @@ public class UserDBUtils {
     public void clearUserInfor() {
         LogUtils.e("clearUserInfor()");
         try {
+            clearUserCircles();
+            clearFriendInfor();
             mUserInforDbUtils.deleteAll(User.class);
         } catch (DbException e) {
             e.printStackTrace();
@@ -54,16 +60,28 @@ public class UserDBUtils {
     public String getUserId() {
         List<User> userList = null;
         try {
-             userList = mUserInforDbUtils.findAll(User.class);
+            userList = mUserInforDbUtils.findAll(User.class);
         } catch (DbException e) {
             e.printStackTrace();
         }
-        if (userList != null)
+        if (userList != null && userList.size() > 0)
             return userList.get(0).getId();
         else
             return null;
     }
 
+    public User getUser() {
+        List<User> userList = null;
+        try {
+            userList = mUserInforDbUtils.findAll(User.class);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        if (userList != null && userList.size() > 0)
+            return userList.get(0);
+        else
+            return null;
+    }
 
     public List<Circle> getUserCircles() {
         List<Circle> circleList = null;
@@ -82,7 +100,7 @@ public class UserDBUtils {
     public String getCircleUUID(String circle) {
         Circle mCircle = null;
         try {
-              mCircle = mUserCircleDbUtils.findFirst(Selector.from(Circle.class).where("circleName","=",circle));
+            mCircle = mUserCircleDbUtils.findFirst(Selector.from(Circle.class).where("circleName", "=", circle));
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -115,6 +133,18 @@ public class UserDBUtils {
 
     }
 
+    public void saveUserCircleToDb(Circle circle) {
+        LogUtils.e("saveUserCirclesToDb(List<Circle>circles)");
+
+        try {
+            mUserCircleDbUtils.save(circle);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     public void closeUserDbUtils() {
         if (mUserInforDbUtils != null)
@@ -136,6 +166,7 @@ public class UserDBUtils {
         else
             return "";
     }
+
     public String getUserAcademy() {
         List<User> userList = null;
         try {
@@ -148,6 +179,7 @@ public class UserDBUtils {
         else
             return "";
     }
+
     public String getUserClass() {
         List<User> userList = null;
         try {
@@ -159,5 +191,61 @@ public class UserDBUtils {
             return userList.get(0).getUserClass();
         else
             return "";
+    }
+
+    /*处理Friend**/
+    public void saveFriendInforToDb(Friend friend) {
+        LogUtils.e("saveFriendInforToDb()");
+        try {
+            mUserFriendDbUtils.save(friend);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Friend getFriendById(String id) {
+        Friend mFriend = null;
+        try {
+            mFriend = mUserFriendDbUtils.findFirst(Selector.from(Friend.class).where("id", "=", id));
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        if (mFriend != null) {
+            return mFriend;
+        } else
+            return null;
+    }
+
+    public void clearFriendInfor() {
+        LogUtils.e("clearFriendInfor()");
+        try {
+            mUserFriendDbUtils.deleteAll(Friend.class);
+        } catch (DbException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+
+    public List<Friend> getUserFriend() {
+        List<Friend> friends = null;
+        try {
+            friends = mUserFriendDbUtils.findAll(Friend.class);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        if (friends != null) {
+            LogUtils.e("在数据库中获得的好友数目：" + friends.size());
+            return friends;
+        } else
+            return null;
+    }
+
+    public void saveUserFriendsToDb(List<Friend> friends) {
+        try {
+            mUserFriendDbUtils.saveAll(friends);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 }

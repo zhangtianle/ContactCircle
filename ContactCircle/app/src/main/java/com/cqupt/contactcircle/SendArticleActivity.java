@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cqupt.app.App;
+import com.cqupt.bean.Circle;
 import com.cqupt.bean.SendArticle;
 import com.cqupt.listener.HttpStateListener;
 import com.cqupt.tool.HttpHandlerUtils;
@@ -28,6 +29,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -49,9 +51,9 @@ public class SendArticleActivity extends Activity implements HttpStateListener {
     private TextView mUserName;
     @ViewInject(R.id.send_article_activity_tx_circle)
     private TextView mUserCircle;
+    @ViewInject(R.id.send_article_activity_tx_type)
+    private TextView mUserInforType;
 
-
-    private String mArticleCircle = "通信学院";//先这样默认的
     private Uri mBitmapUri;
     private List<File> mAttachmentFiles;
     private File mPhotoAttachment;
@@ -60,8 +62,8 @@ public class SendArticleActivity extends Activity implements HttpStateListener {
     private HttpHandlerUtils mHttpHandlerUtils;
     private MaterialDialog dialog;
 
-    public SendArticleActivity() {
-    }
+    private String selectCircle;
+    private String selectType;
 
 
     @Override
@@ -70,7 +72,7 @@ public class SendArticleActivity extends Activity implements HttpStateListener {
         setContentView(R.layout.activity_send_article);
         ViewUtils.inject(this);
         mUserDBUtils = App.getAppInstance().getUserDBUtils();
-        mHttpHandlerUtils = HttpHandlerUtils.getInstance();
+        mHttpHandlerUtils = new HttpHandlerUtils();
         mHttpHandlerUtils.setHttpStateListener(this);
         mAttachmentFiles = new ArrayList<>();
         initInforView();
@@ -79,6 +81,9 @@ public class SendArticleActivity extends Activity implements HttpStateListener {
 
     private void initDialog() {
         dialog = new MaterialDialog.Builder(this)
+                .titleColorRes(R.color.color_primary_red)
+                .contentColorRes(android.R.color.black)
+                .backgroundColorRes(android.R.color.white)
                 .title("正在发送")
                 .content("请稍候...")
                 .progress(true, 0)
@@ -87,7 +92,10 @@ public class SendArticleActivity extends Activity implements HttpStateListener {
 
     private void initInforView() {
         mUserName.setText(mUserDBUtils.getUserName());
-        mUserCircle.setText("所有圈子");
+        selectType = "通知";
+        mUserInforType.setText(selectType);
+        selectCircle = mUserDBUtils.getUserCircles().get(0).getCircleName();
+        mUserCircle.setText(mUserDBUtils.getUserCircles().get(0).getCircleName());
     }
 
 
@@ -113,7 +121,7 @@ public class SendArticleActivity extends Activity implements HttpStateListener {
 
 
     @OnClick({R.id.send_article_activity_tool_iv_attachment, R.id.send_article_activity_tool_iv_camera,
-            R.id.send_article_activity_preview_iv_camera, R.id.send_article_activity_iv_send, R.id.send_message_activity_preview_iv_attachment})
+            R.id.send_article_activity_preview_iv_camera, R.id.send_article_activity_tx_type, R.id.send_article_activity_iv_send, R.id.send_article_activity_tx_circle, R.id.send_message_activity_preview_iv_attachment})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.send_article_activity_tool_iv_attachment://附件按钮
@@ -137,8 +145,55 @@ public class SendArticleActivity extends Activity implements HttpStateListener {
             case R.id.send_article_activity_iv_send:
                 sentArticle();
                 break;
+            case R.id.send_article_activity_tx_circle:
+                selectCircle();
+                break;
+            case R.id.send_article_activity_tx_type:
+                selectType();
+                break;
 
         }
+
+    }
+
+    private void selectType() {
+        String[] typeArray = new String[]{"通知", "会议", "失物招领", "就业信息", "活动进展"};
+        new MaterialDialog.Builder(this)
+                .title("请选择发送的消息类型")
+                .items(typeArray)
+                .titleColorRes(R.color.color_primary_red)
+                .contentColorRes(android.R.color.black)
+                .backgroundColorRes(android.R.color.white)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        selectType = (String) text;
+                        mUserInforType.setText(selectType);
+                    }
+                }).show();
+
+
+    }
+
+    private void selectCircle() {
+        List<Circle> circles = mUserDBUtils.getUserCircles();
+        String[] circleArray = new String[circles.size()];
+        for (int i = 0; i < circles.size(); i++) {
+            circleArray[i] = circles.get(i).getCircleName();
+        }
+        new MaterialDialog.Builder(this)
+                .title("请选择发送的圈子")
+                .items(circleArray)
+                .titleColorRes(R.color.color_primary_red)
+                .contentColorRes(android.R.color.black)
+                .backgroundColorRes(android.R.color.white)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        selectCircle = (String) text;
+                        mUserCircle.setText(selectCircle);
+                    }
+                }).show();
 
     }
 
@@ -156,10 +211,10 @@ public class SendArticleActivity extends Activity implements HttpStateListener {
      */
     private void sentArticle() {
         String mUserUUID = mUserDBUtils.getUserId();//用户UUID
-        String mCircleUUID = mUserDBUtils.getCircleUUID("通信与信息工程学院");//这里也还没有设计出来
+        String mCircleUUID = mUserDBUtils.getCircleUUID(selectCircle);//这里也还没有设计出来////
         String mContent = mArticleContent.getText().toString();
         String mTitle = mArticleTitle.getText().toString();
-        String tags = "通知";
+        String tags = selectType;
         if (mContent.equals("") || mTitle.equals("")) {
             Toast.makeText(this, "请填写完整信息！", Toast.LENGTH_SHORT).show();
             return;
@@ -270,7 +325,7 @@ public class SendArticleActivity extends Activity implements HttpStateListener {
         String fileName = mFileAttachment.getName();
         String pf = fileName.substring(fileName.lastIndexOf(".") + 1);
         setAttachmentIvRes(pf);
-        LogUtils.e("attachment file name is :" + pf);
+        LogUtils.e("attachment file name is :" + fileName);
 
     }
 
@@ -289,7 +344,7 @@ public class SendArticleActivity extends Activity implements HttpStateListener {
     }
 
     @Override
-    public void loginOrRegisterState(String loginState) {
+    public void postState(String loginState) {
 
     }
 

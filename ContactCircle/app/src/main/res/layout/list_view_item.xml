@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:minHeight="72dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="?ic_account"
+            android:id="@+id/list_view_item_user_head" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="李双"
+            style="@style/UserName"
+            android:layout_marginLeft="16dp"
+            android:textSize="16sp"
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            android:id="@+id/list_view_item_user_name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7小时前"
+            style="@style/UpdateTime"
+            android:id="@+id/list_view_item_time"
+            android:layout_marginLeft="16dp"
+            android:textSize="14sp"
+            android:layout_gravity="center_vertical"
+            android:visibility="visible" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我是长长的评论"
+        android:layout_marginLeft="52dp"
+        android:id="@+id/list_view_item_comment" />
+
+</LinearLayout>

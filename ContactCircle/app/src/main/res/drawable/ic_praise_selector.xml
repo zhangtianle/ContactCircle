@@ -2,14 +2,15 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_selected="true" >
         <layer-list>
-            <item android:drawable="@mipmap/ic_praise_press" android:top="10dp" android:bottom="8dp" android:left="8dp" android:right="8dp">
 
-            </item>
             <item>
                 <shape android:shape="oval">
                     <size android:width="40dp" android:height="40dp" />
                     <solid android:color="@color/color_primary_red" />
                 </shape>
+            </item>
+            <item android:drawable="@mipmap/ic_praise_press" android:top="10dp" android:bottom="8dp" android:left="8dp" android:right="8dp">
+
             </item>
         </layer-list>
     </item>

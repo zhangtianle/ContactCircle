@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.cqupt.app.App;
 import com.cqupt.bean.Circle;
+import com.cqupt.bean.Friend;
 import com.cqupt.bean.User;
 import com.cqupt.listener.HttpStateListener;
 import com.cqupt.tool.JSONUtils;
@@ -69,10 +70,10 @@ public class LoginActivity extends Activity implements HttpStateListener {
             Toast.makeText(this, "请正确输入登陆信息", Toast.LENGTH_SHORT).show();
             return;
         }
-        User user = new User(null, userPassWord, userNum, null, null, null, null,null);
+        User user = new User(null, userPassWord, userNum, null, null, null, null, null);
         String jsonString = JSONUtils.getJsonString(user);
         LogUtils.e("login jsonString   " + jsonString);
-        HttpHandlerUtils httpHandlerUtils = HttpHandlerUtils.getInstance();
+        HttpHandlerUtils httpHandlerUtils = new HttpHandlerUtils();
         httpHandlerUtils.setHttpStateListener(this);
         if (jsonString != null)
             httpHandlerUtils.postLoginOrRegisterInfor(App.downLoadURL, "login", jsonString);
@@ -86,19 +87,21 @@ public class LoginActivity extends Activity implements HttpStateListener {
 
 
     @Override
-    public void loginOrRegisterState(String loginState) {
+    public void postState(String loginState) {
         LogUtils.e(" login  state :  " + loginState);
-
         if (loginState.equals("false")) {
             Toast.makeText(this, "登陆失败", Toast.LENGTH_SHORT).show();
         } else {
             goToOtherActivity(MainActivity.class);
             User user = JSONUtils.parseObject(loginState, User.class);
             List<Circle> circles = JSONUtils.parseList(loginState, "circles", Circle.class);
+            List<Friend> friends = JSONUtils.parseList(loginState, "friends", Friend.class);
             dbUtils.clearUserInfor();
             dbUtils.saveUserInforToDb(user);
-            dbUtils.clearUserCircles();
             dbUtils.saveUserCirclesToDb(circles);
+            dbUtils.saveUserFriendsToDb(friends);
+            ///此处处理好友
+
             LogUtils.e(" user is  :  " + user);
         }
     }

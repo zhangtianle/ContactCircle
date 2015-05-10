@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cqupt.bean.Circle;
+import com.cqupt.bean.Friend;
 import com.cqupt.contactcircle.R;
 import com.lidroid.xutils.util.LogUtils;
 
@@ -26,10 +27,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private List<String> mFatherData;
     private List<List<String>> mChildrenData;
     private List<Circle> mCircles;
+    private List<Friend> mFriends;
 
-    public ExpandableListAdapter(Context context, List<Circle> circles) {
+    public ExpandableListAdapter(Context context, List<Circle> circles, List<Friend> friends) {
         this.mContext = context;
         this.mCircles = circles;
+        this.mFriends = friends;
         mFatherInflater = LayoutInflater.from(mContext);
         mChildrenInflater = LayoutInflater.from(mContext);
         initData();
@@ -39,7 +42,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         mFatherData = new ArrayList<String>();
         mChildrenData = new ArrayList<List<String>>();
 
-        mFatherData.add("首页");
+//        mFatherData.add("首页");
         mFatherData.add("关注好友");
         mFatherData.add("联络圈");
 
@@ -48,17 +51,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 //        one1.add("xx");
 //        one1.add("xx");
 
-        mChildrenData.add(null);
 
 
         List<String> two1 = new ArrayList<String>();
+        for (Friend friend : mFriends) {
+            LogUtils.e("添加到Adapter的好友： "+friend);
+            two1.add(friend.getName());
+        }
 //        for (Circle c : mCircles)
 //            two1.add(c.getCircleName());
-        LogUtils.e("mCircles.size() : " + mCircles.size());
+//        LogUtils.e("mCircles.size() : " + mCircles.size());
 
-        two1.add("XXX");
-        two1.add("XX");
-        two1.add("X");
+//        two1.add("XXX");
+//        two1.add("XX");
+//        two1.add("X");
         mChildrenData.add(two1);
 
         List<String> one2 = new ArrayList<String>();
@@ -141,6 +147,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             childrenHolder = (ChildrenHolder) view.getTag();
         }
+
         childrenHolder.mChildrenName.setText((String) getChild(i, i2));
         return view;
 

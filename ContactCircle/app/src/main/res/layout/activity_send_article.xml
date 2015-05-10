@@ -37,7 +37,7 @@
                 android:text="李双"
                 android:textStyle="bold"
                 android:layout_toRightOf="@id/send_message_activity_civ"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="5dp"
                 android:id="@+id/send_article_activity_tx_user_name" />
 
             <TextView
@@ -45,22 +45,28 @@
                 android:layout_height="wrap_content"
                 style="@style/UpdateTime"
                 android:text="通信学院"
+                android:clickable="true"
                 android:layout_below="@id/send_article_activity_tx_user_name"
                 android:layout_alignLeft="@id/send_article_activity_tx_user_name"
                 android:drawableLeft="@mipmap/ic_circle"
                 android:gravity="center"
-                android:drawablePadding="10dp"
                 android:layout_marginTop="3dp"
                 android:id="@+id/send_article_activity_tx_circle" />
-
-            <ImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_send_selector"
-                android:layout_centerVertical="true"
+                style="@style/UpdateTime"
+                android:text="消息"
                 android:clickable="true"
-                android:layout_alignParentRight="true"
-                android:id="@+id/send_article_activity_iv_send" />
+                android:layout_below="@id/send_article_activity_tx_user_name"
+                android:layout_toRightOf="@id/send_article_activity_tx_circle"
+                android:drawableLeft="@mipmap/ic_type"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="3dp"
+                android:id="@+id/send_article_activity_tx_type" />
+
+
         </RelativeLayout>
 
         <EditText
@@ -160,15 +166,16 @@
                 android:id="@+id/send_article_activity_tool_iv_attachment"
                 android:layout_toRightOf="@id/send_article_activity_tool_iv_camera" />
 
+
             <ImageView
                 android:layout_width="54dp"
                 android:layout_height="54dp"
                 android:background="@drawable/iv_send_message_tool_selector"
-                android:src="@mipmap/ic_dots"
+                android:src="@mipmap/ic_send"
                 android:clickable="true"
                 android:scaleType="center"
                 android:layout_alignParentRight="true"
-                android:id="@+id/send_message_activity_iv_require" />
+                android:id="@+id/send_article_activity_iv_send" />
         </RelativeLayout>
 
 

@@ -11,8 +11,8 @@ import com.cqupt.tool.UserDBUtils;
 public class App extends Application {
     public static final int GET_PHOTO_REQUEST_CODE = 1;
     public static final int GET_ATTACHMENT_REQUEST_CODE = 2;
-    public static final String downLoadURL = "http://113.251.167.81/Lianluoquan/Register";
-    public static final String upLoadURL = "http://113.251.167.81/Lianluoquan/Login";
+    public static final String downLoadURL = "http://222.182.103.78/Lianluoquan/Register";
+    public static final String upLoadURL = "http://222.182.103.78/Lianluoquan/Login";
     private UserDBUtils userDBUtils;
     private ArticleDBUtils articleDBUtils;
     private static App mApp;

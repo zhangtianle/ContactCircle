@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ScrollView;
 
+import com.cqupt.listener.ScrollViewListener;
+
 /**
  * Created by ls on 15-4-22.
  */

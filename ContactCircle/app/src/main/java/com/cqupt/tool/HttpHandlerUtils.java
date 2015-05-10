@@ -1,12 +1,8 @@
 package com.cqupt.tool;
 
 import android.app.Activity;
-import android.content.Context;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.cqupt.app.App;
-import com.cqupt.contactcircle.R;
 import com.cqupt.listener.HttpStateListener;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -24,17 +20,12 @@ import java.util.List;
  * Created by ls on 15-4-19.
  */
 public class HttpHandlerUtils {
-    private static final HttpHandlerUtils httpHandlerUtils = new HttpHandlerUtils();
 
 
     private HttpStateListener httpStateListener;
 
-    private HttpHandlerUtils() {
+    public HttpHandlerUtils() {
 
-    }
-
-    public static HttpHandlerUtils getInstance() {
-        return httpHandlerUtils;
     }
 
 
@@ -142,25 +133,60 @@ public class HttpHandlerUtils {
 
                     @Override
                     public void onStart() {
-                        LogUtils.e("onStart()   ");
+                        LogUtils.e("注册登陆onStart()   ");
                     }
 
                     @Override
                     public void onLoading(long total, long current, boolean isUploading) {
-                        LogUtils.e("onLoading()   ");
+                        LogUtils.e("注册登陆onLoading()   ");
                     }
 
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
-                        LogUtils.e("onSuccess()   " + responseInfo.result);
+                        LogUtils.e("注册登陆onSuccess()   " + responseInfo.result);
                         if (httpStateListener != null) {
-                            httpStateListener.loginOrRegisterState(responseInfo.result);
+                            httpStateListener.postState(responseInfo.result);
                         }
                     }
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        LogUtils.e("onFailure()   " + msg);
+                        LogUtils.e("注册登陆onFailure()   " + msg);
+                    }
+                });
+    }
+
+    public void postPraise(String url, String inforType, String uuid) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("type", inforType);
+        params.addBodyParameter("articleuuid", uuid);
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                url,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                        LogUtils.e("onStart()   ");
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                        LogUtils.e("赞onLoading()   ");
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        LogUtils.e("赞onSuccess()   " + responseInfo.result);
+                        if (httpStateListener != null) {
+                            httpStateListener.postState(responseInfo.result);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        LogUtils.e("赞onFailure()   " + msg);
                     }
                 });
     }
@@ -182,12 +208,12 @@ public class HttpHandlerUtils {
 
                     @Override
                     public void onLoading(long total, long current, boolean isUploading) {
-                        LogUtils.e("onLoading()   ");
+                        LogUtils.e("发送文章onLoading()   ");
                     }
 
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
-                        LogUtils.e("onSuccess()   " + responseInfo.result);
+                        LogUtils.e("发送文章onSuccess()   " + responseInfo.result);
                         if (httpStateListener != null) {
                             httpStateListener.refreshArticleState("success");
                         }
@@ -195,10 +221,11 @@ public class HttpHandlerUtils {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
+                        LogUtils.e("发送文章onFailure()   ");
                         if (httpStateListener != null) {
                             httpStateListener.refreshArticleState("failure");
                         }
-                        ;
+
                     }
                 });
     }
@@ -213,7 +240,7 @@ public class HttpHandlerUtils {
             return;
         }
         for (int i = 0; i < files.size(); i++) {
-            params.addBodyParameter("file" + i, files.get(i));
+            params.addBodyParameter("file:   " + files.get(i).getAbsolutePath(), files.get(i));
             LogUtils.e("   file   " + i);
         }
         HttpUtils http = new HttpUtils();
@@ -333,12 +360,12 @@ public class HttpHandlerUtils {
 
                     @Override
                     public void onLoading(long total, long current, boolean isUploading) {
-                        LogUtils.e("postRefreshArticle onLoading()   ");
+                        LogUtils.e("请求文章onLoading()   ");
                     }
 
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
-                        LogUtils.e("postRefreshArticle onSuccess()   " + responseInfo.result);
+                        LogUtils.e("请求文章onSuccess()   " + responseInfo.result);
                         if (httpStateListener != null) {
                             httpStateListener.refreshArticleState(responseInfo.result);
                         }
@@ -346,10 +373,191 @@ public class HttpHandlerUtils {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        LogUtils.e("postRefreshArticle onFailure()   " + msg);
+                        LogUtils.e("请求文章onFailure()   " + msg);
                     }
                 });
     }
+
+
+    public void postRefreshArticle(String url, String inforType, String articleUUID, String time) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("type", inforType);
+        params.addBodyParameter("articleUUID", articleUUID);
+        params.addBodyParameter("time", time);
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                url,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                        LogUtils.e("onStart()   ");
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                        LogUtils.e("请求刷新这个文章onLoading()   ");
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        LogUtils.e("请求刷新这个文章onSuccess()   " + responseInfo.result);
+                        if (httpStateListener != null) {
+                            httpStateListener.refreshArticleState(responseInfo.result);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        LogUtils.e("请求刷新这个文章onFailure()   " + msg);
+                    }
+                });
+    }
+
+    public void postComment(String url, String inforType, String articleUUID) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("type", inforType);
+        params.addBodyParameter("comment", articleUUID);
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                url,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                        LogUtils.e("onStart()   ");
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                        LogUtils.e("回复onLoading()   ");
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        LogUtils.e("回复onSuccess()   " + responseInfo.result);
+                        if (httpStateListener != null) {
+                            httpStateListener.postState(responseInfo.result);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        LogUtils.e("回复onFailure()   " + msg);
+                    }
+                });
+    }
+
+    public void getUserArticleInfor(String url, String inforType, String userUUID) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("type", inforType);
+        params.addBodyParameter("userUUID", userUUID);
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                url,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                        LogUtils.e("个人文章onStart()   ");
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                        LogUtils.e("个人文章onLoading()   ");
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        LogUtils.e("个人文章onSuccess()   " + responseInfo.result);
+                        if (httpStateListener != null) {
+                            httpStateListener.refreshArticleState(responseInfo.result);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        LogUtils.e("个人文章onFailure()   " + msg);
+                    }
+                });
+    }
+
+    public void searchCirclsInfor(String url, String inforType, String userUUID, String infor) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("type", inforType);
+        params.addBodyParameter("userUUID", userUUID);
+        params.addBodyParameter("infor", infor);
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                url,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                        LogUtils.e("获取的圈子名称onStart()   ");
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                        LogUtils.e("获取的圈子名称onLoading()   ");
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        LogUtils.e("获取的圈子名称onSuccess()   " + responseInfo.result);
+                        if (httpStateListener != null) {
+                            httpStateListener.postState(responseInfo.result);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        LogUtils.e("获取的圈子名称onFailure()   " + msg);
+                    }
+                });
+    }
+
+    public void follow(String url, String inforType, String followType, String followUUID, String userUUID) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("type", inforType);
+        params.addBodyParameter("followType", followType);
+        params.addBodyParameter("followUUID", followUUID);
+        params.addBodyParameter("userUUID", userUUID);
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                url,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                        LogUtils.e("关注onStart()   ");
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                        LogUtils.e("关注onLoading()   ");
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        LogUtils.e("关注onSuccess()   " + responseInfo.result);
+                        if (httpStateListener != null) {
+                            httpStateListener.postState(responseInfo.result);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        LogUtils.e("关注onFailure()   " + msg);
+                    }
+                });
+    }
+
 
 }
 

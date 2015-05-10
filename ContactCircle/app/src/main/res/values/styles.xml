@@ -11,6 +11,7 @@
         <item name="ic_account">@mipmap/ic_account_white</item>
         <item name="tx_color_user_name">@android:color/white</item>
         <item name="colorAccent">@color/color_primary_red</item>
+
     </style>
 
     <style name="ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
@@ -34,6 +35,7 @@
 
     <style name="UpdateTime" parent="TextAppearance.AppCompat.Display1">
         <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="AppTheme.SendMessage" parent="android:style/Theme.Translucent.NoTitleBar">
@@ -51,6 +53,12 @@
 
         <item name="android:activityOpenEnterAnimation">@anim/send_message_activity_in</item>
         <item name="android:activityCloseExitAnimation">@anim/send_message_activity_out</item>
+    </style>
+
+
+    <style name="AppTheme.Search" parent="AppTheme">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorHint">@color/color_primary_blue_light</item>
     </style>
 
 

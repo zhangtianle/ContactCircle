@@ -29,7 +29,7 @@ public class JSONUtils {
         JSONObject object = JSON.parseObject(json);
         JSONArray array = object.getJSONArray(type);
         for (int i = 0; i < array.size(); i++) {
-            LogUtils.e(" parseList ::           " + JSON.parseObject(array.get(i).toString(), t));
+            LogUtils.e(" json解析得到的 :" + JSON.parseObject(array.get(i).toString(), t));
             tS.add(JSON.parseObject(array.get(i).toString(), t));
         }
         return tS;

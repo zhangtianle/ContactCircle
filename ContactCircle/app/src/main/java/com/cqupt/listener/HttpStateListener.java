@@ -5,7 +5,7 @@ package com.cqupt.listener;
  */
 public interface HttpStateListener {
 
-    void loginOrRegisterState(String loginState);
+    void postState(String loginState);
 
     void refreshArticleState(String refreshState);
 
